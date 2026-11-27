@@ -1,0 +1,2474 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Pyroprocess Carbon Console</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    color-scheme: light;
+    --bg:#e8ebee;
+    --grid:rgba(52,74,96,.07);
+    --surface:#fbfcfd;
+    --surface-2:#f0f3f5;
+    --surface-sunken:#e4e8ec;
+    --border:#d0d7dd;
+    --border-strong:#a7b2bc;
+    --ink-900:#141a20;
+    --ink-700:#34404a;
+    --ink-500:#5b6975;
+    --ink-400:#85919c;
+    --accent-fire:#d4511a;
+    --accent-fire-soft:#fae5da;
+    --accent-mineral:#1f5fa8;
+    --accent-mineral-soft:#dce8f4;
+    --accent-bio:#138660;
+    --accent-bio-soft:#d8eee4;
+    --status-good:#14892d;
+    --status-warning:#a96b00;
+    --status-serious:#c4491f;
+    --status-critical:#c73636;
+    --status-good-soft:#dcf1e0;
+    --status-warning-soft:#fcecc8;
+    --status-critical-soft:#f7dcdc;
+    --shadow: 0 1px 0 rgba(20,30,40,.05);
+    --font-display: "IBM Plex Sans Condensed", "Archivo Narrow", "Arial Narrow", sans-serif;
+    --font-body: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme: dark;
+      --bg:#101419;
+      --grid:rgba(160,185,210,.05);
+      --surface:#181e24;
+      --surface-2:#1e262d;
+      --surface-sunken:#12171c;
+      --border:#2a343d;
+      --border-strong:#404d58;
+      --ink-900:#e9eef2;
+      --ink-700:#bcc7d0;
+      --ink-500:#8996a2;
+      --ink-400:#62707c;
+      --accent-fire:#ee7640;
+      --accent-fire-soft:#3a2417;
+      --accent-mineral:#5b9ce2;
+      --accent-mineral-soft:#172a41;
+      --accent-bio:#2fbf8b;
+      --accent-bio-soft:#10302a;
+      --status-good:#3fc23f;
+      --status-warning:#e0a530;
+      --status-serious:#e0764f;
+      --status-critical:#e66767;
+      --status-good-soft:#163319;
+      --status-warning-soft:#3a2c10;
+      --status-critical-soft:#3a1a1a;
+      --shadow: 0 1px 0 rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --bg:#101419;
+    --grid:rgba(160,185,210,.05);
+    --surface:#181e24;
+    --surface-2:#1e262d;
+    --surface-sunken:#12171c;
+    --border:#2a343d;
+    --border-strong:#404d58;
+    --ink-900:#e9eef2;
+    --ink-700:#bcc7d0;
+    --ink-500:#8996a2;
+    --ink-400:#62707c;
+    --accent-fire:#ee7640;
+    --accent-fire-soft:#3a2417;
+    --accent-mineral:#5b9ce2;
+    --accent-mineral-soft:#172a41;
+    --accent-bio:#2fbf8b;
+    --accent-bio-soft:#10302a;
+    --status-good:#3fc23f;
+    --status-warning:#e0a530;
+    --status-serious:#e0764f;
+    --status-critical:#e66767;
+    --status-good-soft:#163319;
+    --status-warning-soft:#3a2c10;
+    --status-critical-soft:#3a1a1a;
+    --shadow: 0 1px 0 rgba(0,0,0,.4);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background-color:var(--bg);
+    background-image:linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size:24px 24px;
+    color:var(--ink-900);
+    font-family:var(--font-body);
+    font-size:14px;
+    line-height:1.45;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--accent-fire-soft); }
+  .num{ font-family:var(--font-mono); font-variant-numeric:tabular-nums; }
+  input[type=number], input[type=text], select{
+    font-family:var(--font-mono);
+    font-variant-numeric:tabular-nums;
+  }
+  a{ color:var(--accent-mineral); }
+  h1,h2,h3{ text-wrap:balance; margin:0; font-family:var(--font-display); font-weight:600; letter-spacing:.01em; }
+
+  .app{ max-width:1360px; margin:0 auto; padding:20px 20px 64px; }
+
+  /* ---------- Header ---------- */
+  .hdr{
+    display:flex; align-items:flex-end; justify-content:space-between; gap:20px;
+    flex-wrap:wrap; padding-bottom:16px; margin-bottom:18px;
+    border-bottom:3px double var(--ink-700);
+  }
+  .hdr-title-row{ display:flex; align-items:center; gap:12px; }
+  .hdr-badge{
+    width:40px; height:40px; border-radius:2px; flex:none;
+    background:#1c242c; border:1px solid var(--border-strong);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:var(--shadow);
+  }
+  .hdr-badge svg{ width:22px; height:22px; }
+  .eyebrow{
+    font-family:var(--font-mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--ink-500); margin:0 0 2px;
+  }
+  h1.title{ font-size:28px; line-height:1; text-transform:uppercase; letter-spacing:.04em; font-weight:700; }
+  .hdr-sub{ color:var(--ink-500); font-size:12.5px; margin-top:4px; max-width:52ch; }
+
+  .timespan{
+    display:flex; gap:4px; background:var(--surface-sunken); padding:4px; border-radius:2px;
+    border:1px solid var(--border); flex-wrap:wrap; max-width:640px;
+  }
+  .timespan button{
+    font-family:var(--font-mono); font-size:11.5px; letter-spacing:.03em;
+    border:none; background:transparent; color:var(--ink-500);
+    padding:6px 9px; border-radius:2px; cursor:pointer; transition:background .12s,color .12s;
+  }
+  .timespan button:hover{ color:var(--ink-900); }
+  .timespan button.active{ background:var(--surface); color:var(--ink-900); box-shadow:var(--shadow); font-weight:600; }
+  .timespan button.ytd{ font-weight:700; color:var(--accent-fire); }
+  .timespan button.ytd.active{ color:var(--accent-fire); }
+
+  /* ---------- KPI strip ---------- */
+  .kpi-strip{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:22px; }
+  @media (max-width:900px){ .kpi-strip{ grid-template-columns:repeat(2,1fr);} }
+  .kpi{
+    background:var(--surface); border:1px solid var(--border); border-radius:2px;
+    padding:14px 16px; box-shadow:var(--shadow); position:relative; overflow:hidden;
+  }
+  .kpi::before{
+    content:""; position:absolute; left:0; right:0; top:0; height:3px; background:var(--kpi-accent, var(--ink-400));
+  }
+  .kpi-label{ font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-500); font-weight:600; }
+  .kpi-value{ font-family:var(--font-mono); font-variant-numeric:tabular-nums; letter-spacing:-.02em; font-size:28px; line-height:1.05; margin-top:6px; font-weight:700; }
+  .kpi-value .unit{ font-family:var(--font-body); font-size:13px; color:var(--ink-500); font-weight:500; margin-left:3px; }
+  .kpi-foot{ font-size:11.5px; color:var(--ink-500); margin-top:6px; display:flex; align-items:center; gap:6px; }
+  .kpi-split-bar{ display:flex; height:8px; gap:2px; border-radius:2px; overflow:hidden; margin-top:8px; background:var(--surface-sunken); }
+  .dot{ width:7px; height:7px; border-radius:50%; display:inline-block; }
+  /* One tone system for every categorical colour (tags, bars, legend dots): soft tint + coloured edge, like the fuel tags */
+  :root{ --accent-ink:var(--ink-500); --accent-ink-soft:var(--border); }
+  .tone-fire{ --t:var(--accent-fire); --ts:var(--accent-fire-soft); }
+  .tone-bio{ --t:var(--accent-bio); --ts:var(--accent-bio-soft); }
+  .tone-mineral{ --t:var(--accent-mineral); --ts:var(--accent-mineral-soft); }
+  .tone-ink{ --t:var(--accent-ink); --ts:var(--accent-ink-soft); }
+  .tone-fill{ background:var(--ts); box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--t) 60%, transparent); }
+  .dot.tone-fill{ width:10px; height:10px; box-sizing:border-box; }
+  .tone-fill.stripe{ background-image:repeating-linear-gradient(135deg, transparent 0 5px, color-mix(in srgb, var(--t) 30%, transparent) 5px 7px); }
+
+  /* ---------- Layout ---------- */
+  .layout{ display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); gap:16px; align-items:start; }
+  @media (max-width:980px){ .layout{ grid-template-columns:1fr; } }
+  .col{ display:flex; flex-direction:column; gap:16px; min-width:0; }
+
+  .card{
+    background:var(--surface); border:1px solid var(--border); border-radius:2px;
+    box-shadow:var(--shadow); overflow:hidden;
+  }
+  .card-hd{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:13px 16px; border-bottom:1px solid var(--border); background:var(--surface-2);
+  }
+  .card-hd h2{ font-size:15px; letter-spacing:.02em; }
+  .card-hd .hint{ font-size:11px; color:var(--ink-500); font-family:var(--font-body); font-weight:500; }
+  .card-bd{ padding:15px 16px 17px; }
+  .card-bd + .card-bd{ border-top:1px solid var(--border); }
+
+  .field-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px 12px; }
+  .field-grid.cols-1{ grid-template-columns:1fr; }
+  .field-grid.cols-3{ grid-template-columns:repeat(3,1fr); }
+  .field-grid.cols-2x{ grid-template-columns:repeat(2,1fr); }
+  @media (max-width:640px){ .field-grid.cols-3, .field-grid.cols-2x{ grid-template-columns:1fr; } }
+  @media (max-width:520px){ .field-grid{ grid-template-columns:1fr; } }
+  label.field{ display:flex; flex-direction:column; gap:4px; }
+  label.field span.lbl{ font-size:11px; color:var(--ink-700); font-weight:600; letter-spacing:.02em; }
+  label.field span.lbl b{ color:var(--ink-400); font-weight:500; }
+  .input-wrap{ position:relative; display:flex; align-items:center; }
+  input[type=number], input[type=text], select{
+    width:100%; padding:7px 30px 7px 9px; border-radius:2px; border:1px solid var(--border-strong);
+    background:var(--surface); color:var(--ink-900); font-size:13px; outline:none;
+    transition:border-color .12s, box-shadow .12s;
+  }
+  select{ padding-right:26px; appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%2385919c'/></svg>"); background-repeat:no-repeat; background-position:right 9px center; }
+  input:focus, select:focus{ border-color:var(--accent-mineral); box-shadow:0 0 0 1px var(--accent-mineral); }
+  /* Typed numbers only — no up/down steppers */
+  input[type=number]{ -moz-appearance:textfield; appearance:textfield; }
+  input[type=number]::-webkit-outer-spin-button, input[type=number]::-webkit-inner-spin-button{ -webkit-appearance:none; appearance:none; margin:0; }
+  .input-unit{ position:absolute; right:9px; font-size:10.5px; color:var(--ink-500); pointer-events:none; font-family:var(--font-body); }
+
+  .subhead{
+    font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-500); font-weight:700;
+    display:flex; align-items:center; gap:7px; margin:2px 0 2px;
+  }
+  .subhead::after{ content:""; flex:1; height:1px; background:var(--border); }
+
+  /* ---------- Fuel table ---------- */
+  .fuel-table-wrap{ overflow-x:auto; }
+  table.fuel-table{ width:100%; border-collapse:collapse; min-width:760px; }
+  table.fuel-table th{
+    text-align:left; font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-500);
+    font-weight:600; padding:0 6px 6px; white-space:nowrap;
+  }
+  table.fuel-table td{ padding:3px 6px; vertical-align:middle; }
+  table.fuel-table td input, table.fuel-table td select{ padding:6px 8px; font-size:12px; min-width:64px; }
+  table.fuel-table td.name-cell input{ font-family:var(--font-body); min-width:110px; }
+  .fuel-tag{
+    font-size:9.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+    padding:2px 6px; border-radius:2px; white-space:nowrap; display:inline-block;
+  }
+  .fuel-tag.fossil{ background:var(--accent-fire-soft); color:var(--accent-fire); }
+  .fuel-tag.bio{ background:var(--accent-bio-soft); color:var(--accent-bio); }
+  .fuel-tag.mixed{ background:linear-gradient(90deg,var(--accent-fire-soft),var(--accent-bio-soft)); color:var(--ink-700); }
+  table.fuel-table td select[data-fkey="category"]{
+    font-family:var(--font-body); font-weight:700; font-size:11px; letter-spacing:.02em;
+    min-width:88px; padding:6px 22px 6px 8px;
+  }
+  select.cat-fossil{ background-color:var(--accent-fire-soft); color:var(--accent-fire); border-color:transparent; }
+  select.cat-biogenic{ background-color:var(--accent-bio-soft); color:var(--accent-bio); border-color:transparent; }
+  select.cat-mixed{ background-color:var(--surface-sunken); color:var(--ink-700); border-color:var(--border-strong); }
+  table.fuel-table td input:disabled{ opacity:.45; cursor:not-allowed; background:var(--surface-2); }
+
+  /* ---------- Background EF table ---------- */
+  .ef-wrap{ overflow-x:auto; }
+  table.ef-table{ width:100%; border-collapse:collapse; min-width:560px; table-layout:fixed; }
+  table.ef-table col.c-mat{ width:27%; } table.ef-table col.c-cls{ width:15%; } table.ef-table col.c-ef{ width:30%; } table.ef-table col.c-src{ width:28%; }
+  table.ef-table th{
+    text-align:left; font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-500);
+    font-weight:600; padding:0 8px 6px; border-bottom:1px solid var(--border-strong);
+  }
+  table.ef-table th.th-ef, table.ef-table td.ef-cell{ text-align:right; }
+  table.ef-table td{ padding:9px 8px; vertical-align:top; font-size:12.5px; border-bottom:1px dashed var(--border); }
+  table.ef-table tr:last-child td{ border-bottom:none; }
+  table.ef-table td.name-cell{ font-family:var(--font-body); color:var(--ink-900); font-weight:600; }
+  table.ef-table .mat-sub{ display:flex; flex-wrap:wrap; gap:4px; margin-top:4px; }
+  table.ef-table .mat-tag{ font-size:9.5px; font-weight:600; letter-spacing:.03em; color:var(--ink-500); background:var(--surface-sunken); border:1px solid var(--border); border-radius:2px; padding:1px 7px; cursor:help; }
+  table.ef-table td.src-cell{ padding-top:11px; }
+  table.ef-table td input{ padding:6px 8px; font-size:12px; width:100%; box-sizing:border-box; text-align:right; }
+  table.ef-table td.cls-cell{ padding-top:11px; }
+  .ef-input-wrap{ display:flex; flex-direction:column; align-items:flex-end; gap:4px; }
+  /* Needs attention (unverified / custom): soft amber input, never a dead grey box */
+  input.ef-warn{ background:var(--status-warning-soft); border-color:var(--status-warning); }
+  input.ef-warn:focus{ border-color:var(--status-warning); box-shadow:0 0 0 3px var(--status-warning-soft); }
+  /* On-site materials: separate inventory block, no EF field at all */
+  .onsite-row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:8px 12px; border:1px dashed var(--border-strong); border-radius:2px; background:var(--surface-2); }
+  .onsite-row .os-name{ font-weight:600; font-size:12.5px; color:var(--ink-500); }
+
+  /* ---------- Strict Audit Mode badges ---------- */
+  .audit-badge{
+    display:inline-block; font-size:9px; font-weight:700; letter-spacing:.03em; text-transform:uppercase;
+    padding:2px 7px; border-radius:2px; white-space:nowrap; cursor:default;
+  }
+  .audit-badge.verified{ background:var(--status-good-soft); color:var(--status-good); }
+  .audit-badge.unverified{ background:var(--status-critical-soft); color:var(--status-critical); }
+  .audit-badge.placeholder{ background:var(--status-warning-soft); color:var(--status-warning); }
+  .audit-badge.excluded{ background:var(--surface-sunken); color:var(--ink-500); border:1px solid var(--border-strong); }
+  label.field span.lbl .audit-badge{ margin-left:7px; vertical-align:middle; }
+
+  .row-del{
+    width:24px;height:24px;border-radius:2px;border:1px solid var(--border-strong);background:var(--surface);
+    color:var(--ink-500); cursor:pointer; font-size:13px; line-height:1; display:flex;align-items:center;justify-content:center;
+  }
+  .row-del:hover{ background:var(--status-critical-soft); color:var(--status-critical); border-color:var(--status-critical); }
+  .add-fuel-btn{
+    margin-top:9px; font-family:var(--font-body); font-size:12px; font-weight:600; cursor:pointer;
+    border:1px dashed var(--border-strong); background:transparent; color:var(--ink-700);
+    padding:7px 12px; border-radius:2px; width:100%; transition:.12s;
+  }
+  .add-fuel-btn:hover{ background:var(--surface-2); border-color:var(--accent-mineral); color:var(--accent-mineral); }
+  .fuel-add-row{ display:flex; gap:8px; flex-wrap:wrap; }
+  .fuel-add-row .add-fuel-btn{ flex:1 1 220px; width:auto; }
+  select.add-fuel-btn{ appearance:auto; text-align:left; }
+  table.fuel-table input.calc-val{ background:var(--surface-sunken); color:var(--ink-700); cursor:default; }
+  table.fuel-table td.na-cell{ color:var(--ink-400); text-align:center; }
+  /* Proxy (library default) values: soft amber until the plant's own figure is typed in */
+  table.fuel-table input.proxy-val{ background:var(--status-warning-soft); border-color:var(--status-warning); }
+
+  .btn-reset{
+    font-family:var(--font-body); font-size:11.5px; font-weight:600; cursor:pointer;
+    border:1px solid var(--border-strong); background:var(--surface); color:var(--ink-500);
+    padding:5px 10px; border-radius:2px; transition:.12s;
+  }
+  .btn-reset:hover{ color:var(--ink-900); border-color:var(--ink-500); }
+
+  /* ---------- Excel import ---------- */
+  .import-row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .btn-import{
+    font-family:var(--font-body); font-size:12.5px; font-weight:700; cursor:pointer;
+    border:1px solid var(--accent-mineral); background:var(--accent-mineral-soft); color:var(--accent-mineral);
+    padding:9px 14px; border-radius:2px; transition:.12s; white-space:nowrap;
+  }
+  .btn-import:hover{ background:var(--accent-mineral); color:#fff; }
+  .btn-import:disabled{ opacity:.6; cursor:wait; }
+  .import-note{ margin-top:9px; }
+  .import-banner{ margin-top:10px; padding:9px 12px; border-radius:2px; font-size:12px; line-height:1.5; }
+  .import-banner-good{ background:var(--status-good-soft); color:var(--status-good); border:1px solid var(--status-good); }
+  .import-banner-bad{ background:var(--status-critical-soft); color:var(--status-critical); border:1px solid var(--status-critical); }
+  .import-banner-info{ background:var(--accent-mineral-soft); color:var(--accent-mineral); border:1px solid var(--accent-mineral); }
+
+  .product-line-card{ margin-bottom:14px; }
+  .product-line-row{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  .product-line-row .field{ margin:0; min-width:260px; flex:0 0 auto; }
+  .product-line-note{ font-size:11.5px; color:var(--ink-500); line-height:1.5; flex:1 1 240px; min-width:200px; }
+  .product-line-note.is-proxy{ color:var(--status-warning); }
+  .btn-secondary{ background:transparent; color:var(--accent-mineral); border:1px solid var(--accent-mineral); }
+  .btn-secondary:hover{ background:var(--accent-mineral); color:#fff; }
+  details.template-ref{ margin-top:10px; }
+  .ref-table-wrap{ overflow-x:auto; margin:4px 0; }
+  table.ref-table{ width:100%; border-collapse:collapse; font-size:11.5px; min-width:420px; }
+  table.ref-table th{ text-align:left; padding:4px 6px; color:var(--ink-500); font-weight:600; border-bottom:1px solid var(--border-strong); white-space:nowrap; }
+  table.ref-table td{ padding:4px 6px; border-bottom:1px dashed var(--border); color:var(--ink-700); }
+  table.ref-table td.rownum{ font-family:var(--font-mono); color:var(--ink-400); white-space:nowrap; }
+  table.ref-table td.colspan{ font-family:var(--font-mono); white-space:nowrap; color:var(--ink-500); }
+
+  /* ---------- Charts ---------- */
+  .stackbar{ display:flex; height:30px; border-radius:2px; overflow:hidden; background:var(--surface-sunken); border:1px solid var(--border); }
+  .stackbar > div{ position:relative; min-width:0; transition:flex-basis .25s ease; }
+  .stackbar > div + div{ border-left:2px solid var(--surface); }
+  .legend-row{ display:flex; flex-wrap:wrap; gap:12px; margin-top:9px; }
+  .legend-item{ display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--ink-700); }
+  .legend-item .num{ color:var(--ink-900); font-weight:600; margin-left:2px; }
+
+  .compare-row{ display:flex; flex-direction:column; gap:10px; }
+  .compare-item .compare-hd{ display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px; }
+  .compare-item .compare-hd .name{ color:var(--ink-700); font-weight:600; }
+  .compare-track{ height:12px; border-radius:2px; background:var(--surface-sunken); border:1px solid var(--border); overflow:hidden; }
+  .compare-fill{ height:100%; border-radius:2px; }
+
+  .trend-wrap{ overflow-x:auto; }
+  svg.trend-chart{ display:block; }
+  .tt{
+    position:fixed; pointer-events:none; z-index:50; background:var(--ink-900); color:var(--bg);
+    font-family:var(--font-mono); font-size:11px; padding:7px 9px; border-radius:2px; line-height:1.5;
+    box-shadow:var(--shadow); opacity:0; transform:translateY(4px); transition:opacity .1s, transform .1s;
+    max-width:220px;
+  }
+  .tt.show{ opacity:1; transform:translateY(0); }
+  .tt .tt-title{ font-weight:700; margin-bottom:2px; font-family:var(--font-body); }
+
+  /* ---------- Block Flow Diagram ---------- */
+  .bfd-svg-wrap{ overflow-x:auto; }
+  svg.bfd-svg{ display:block; width:100%; height:auto; min-width:380px; }
+
+  /* ---------- Mass balance ---------- */
+  .mb-flow{ display:grid; grid-template-columns:1fr auto 1fr; gap:10px; align-items:center; }
+  .mb-side h3{ font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-500); font-weight:700; margin-bottom:8px;}
+  .mb-line{ display:flex; justify-content:space-between; gap:8px; font-size:12px; padding:4px 0; border-bottom:1px dashed var(--border); }
+  .mb-line:last-child{ border-bottom:none; }
+  .mb-line .v{ font-weight:600; }
+  .mb-total{ display:flex; justify-content:space-between; font-size:12.5px; font-weight:700; padding-top:7px; margin-top:3px; border-top:1px solid var(--border-strong); }
+  .mb-arrow{ display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .mb-status{
+    padding:8px 12px; border-radius:2px; text-align:center; font-size:11px; font-weight:700;
+    letter-spacing:.03em; white-space:nowrap;
+  }
+  .mb-delta{ font-family:var(--font-mono); font-size:15px; font-weight:700; }
+
+  .status-pill{
+    display:inline-flex; align-items:center; gap:5px; font-size:10.5px; font-weight:700; letter-spacing:.03em;
+    padding:4px 9px; border-radius:2px; text-transform:uppercase;
+  }
+  .status-pill .dot{ width:6px;height:6px; }
+  .status-good{ background:var(--status-good-soft); color:var(--status-good); }
+  .status-warning{ background:var(--status-warning-soft); color:var(--status-warning); }
+  .status-critical{ background:var(--status-critical-soft); color:var(--status-critical); }
+
+  .footnote{ font-size:11px; color:var(--ink-500); line-height:1.6; }
+  .footnote code{ font-family:var(--font-mono); background:var(--surface-sunken); padding:1px 5px; border-radius:2px; font-size:10.5px; }
+
+  /* ---------- Calculation Trace & Audit Note ---------- */
+  .trace-note{
+    margin-top:10px; padding:6px 10px; border-left:3px solid var(--accent-mineral);
+    background:var(--surface-2); border-radius:0 2px 2px 0;
+    font-family:var(--font-mono); font-size:10.5px; line-height:1.6; color:var(--ink-500);
+  }
+  .trace-note .trace-label{ color:var(--accent-mineral); font-weight:700; }
+  details.methodology summary{ cursor:pointer; font-size:12px; font-weight:600; color:var(--ink-700); list-style:none; display:flex; align-items:center; gap:6px;}
+  details.methodology summary::-webkit-details-marker{ display:none; }
+  details.methodology summary::before{ content:"▸"; font-size:10px; color:var(--ink-400); transition:transform .15s; }
+  details.methodology[open] summary::before{ transform:rotate(90deg); }
+  details.methodology .m-body{ padding-top:10px; display:grid; gap:8px; }
+
+  /* ---------- Background Parameters & Emission Factors (settings panel) ---------- */
+  details.settings-panel{ padding:0; }
+  details.settings-panel summary{
+    cursor:pointer; list-style:none; padding:13px 16px; border-bottom:1px solid var(--border); background:var(--surface-2);
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  details.settings-panel summary::-webkit-details-marker{ display:none; }
+  details.settings-panel:not([open]) summary{ border-bottom:none; }
+  details.settings-panel .sp-title{ display:flex; align-items:center; gap:8px; }
+  details.settings-panel .sp-title h2{ font-size:15px; letter-spacing:.02em; }
+  details.settings-panel .sp-sub{ font-size:11px; font-weight:500; color:var(--ink-500); font-family:var(--font-body); }
+  details.settings-panel .sp-chevron{ font-size:10px; color:var(--ink-400); transition:transform .15s; flex:0 0 auto; }
+  details.settings-panel[open] .sp-chevron{ transform:rotate(90deg); }
+
+  /* ---------- Detail switch: formulas, trace lines and explanatory notes show only on request ---------- */
+  .detail-switch{ position:relative; display:inline-flex; align-items:center; gap:8px; cursor:pointer; font-size:11.5px; color:var(--ink-500); user-select:none; }
+  .detail-switch input{ position:absolute; opacity:0; width:0; height:0; }
+  .detail-switch .track{ width:30px; height:17px; border-radius:10px; background:var(--surface-sunken); border:1px solid var(--border-strong); position:relative; transition:background .15s, border-color .15s; }
+  .detail-switch .track::after{ content:""; position:absolute; top:2px; left:2px; width:11px; height:11px; border-radius:50%; background:var(--ink-400); transition:transform .15s, background .15s; }
+  .detail-switch input:checked + .track{ background:var(--accent-mineral-soft); border-color:var(--accent-mineral); }
+  .detail-switch input:checked + .track::after{ transform:translateX(13px); background:var(--accent-mineral); }
+  .detail-switch input:focus-visible + .track{ box-shadow:0 0 0 3px var(--accent-mineral-soft); }
+  /* Switch OFF = no descriptive text anywhere: notes, trace lines, card sub-labels, subtitles, reference blocks. */
+  .app:not(.show-detail) .trace-note,
+  .app:not(.show-detail) .footnote,
+  .app:not(.show-detail) .hint,
+  .app:not(.show-detail) .sp-sub,
+  .app:not(.show-detail) .ap-sub,
+  .app:not(.show-detail) .hdr-sub,
+  .app:not(.show-detail) .product-line-note,
+  .app:not(.show-detail) .template-ref,
+  .app:not(.show-detail) footer.app-foot > span:first-child,
+  .app:not(.show-detail) #methodologyCard{ display:none; }
+
+  /* Console-provided values (sourced factors): flat, read-only look — visibly not a box to fill in */
+  .provided{ display:inline-flex; align-items:center; flex-wrap:wrap; justify-content:flex-end; gap:4px 8px; padding:5px 0; }
+  .provided .pv{ font-size:13px; font-weight:600; color:var(--ink-900); }
+  .provided .pu{ font-size:10.5px; color:var(--ink-500); }
+  .link-btn{ font-family:var(--font-body); font-size:11px; color:var(--accent-mineral); background:none; border:none; padding:0; cursor:pointer; text-decoration:underline; text-underline-offset:2px; }
+  .link-btn:hover{ color:var(--ink-900); }
+  label.field.provided-field{ cursor:default; }
+  .restore-row{ display:flex; justify-content:flex-end; margin-top:2px; }
+
+  /* Calculation drop-down: results the console computes from the numbers above. Closed by default, click to open. */
+  details.calc-dd{ margin-top:12px; border:1px solid var(--border); border-radius:2px; background:var(--surface-2); }
+  details.calc-dd > summary{ cursor:pointer; list-style:none; display:flex; align-items:center; gap:7px; padding:8px 12px; font-size:12px; font-weight:600; color:var(--ink-700); }
+  details.calc-dd > summary::-webkit-details-marker{ display:none; }
+  details.calc-dd > summary::before{ content:"▸"; font-size:10px; color:var(--ink-400); transition:transform .15s; }
+  details.calc-dd[open] > summary::before{ transform:rotate(90deg); }
+  details.calc-dd > summary:hover{ color:var(--ink-900); }
+  details.calc-dd > summary:focus-visible{ outline:2px solid var(--accent-mineral); outline-offset:2px; border-radius:2px; }
+  details.calc-dd .calc-dd-body{ padding:2px 12px 12px; }
+  details.calc-dd.no-top{ margin-top:0; }
+  .conv-lead{ margin:2px 0 10px; font-size:11.5px; color:var(--ink-500); line-height:1.5; }
+  .conv-out{ margin:12px 0 10px; padding:8px 10px; background:var(--surface); border:1px dashed var(--border-strong); border-radius:2px; font-family:var(--font-mono); font-size:11.5px; line-height:1.6; color:var(--ink-700); }
+
+  footer.app-foot{ margin-top:26px; padding-top:14px; border-top:1px solid var(--border); font-size:11px; color:var(--ink-400); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;}
+</style>
+
+<div class="app">
+
+  <div class="hdr">
+    <div>
+      <div class="hdr-title-row">
+        <div class="hdr-badge">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 20V9l3-2v3l3-2v3l3-2v3l3-2v10H4Z" fill="#e8ebee"/><path d="M17 20v-6l3-2v8h-3Z" fill="#e8ebee" fill-opacity=".55"/></svg>
+        </div>
+        <div>
+          <p class="eyebrow" id="eyebrowLine">White Cement · Pyroprocess GHG Console</p>
+          <h1 class="title">Pyroprocess Carbon Console</h1>
+        </div>
+      </div>
+      <p class="hdr-sub" id="hdrSub">Baseline data from the plant's "mass balance matrix" workbook — production &amp; fuels through Jul 2026, electricity &amp; water through Jun. Aug–Dec await reporting (shown as 0). Every field is editable; results recompute instantly.</p>
+    </div>
+    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:10px;">
+      <div class="timespan" id="timespanTabs"></div>
+      <label class="detail-switch" title="Shows the formulas, trace lines, explanatory notes and the full methodology. Off by default — the numbers don't change.">
+        <input type="checkbox" id="detailToggle"><span class="track"></span><span>Show how it's calculated</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="card product-line-card">
+    <div class="card-bd" id="productLineBar"></div>
+  </div>
+
+  <div class="kpi-strip" id="kpiStrip"></div>
+
+  <div class="layout">
+    <!-- LEFT: INPUTS -->
+    <div class="col">
+
+      <div class="card">
+        <div class="card-hd">
+          <h2>Import Monthly Data</h2>
+          <span class="hint">.xlsx</span>
+        </div>
+        <div class="card-bd">
+          <div class="import-row">
+            <button class="btn-import" id="importBtn">Upload Excel file (.xlsx)</button>
+            <input type="file" id="importFile" accept=".xlsx,.xls" hidden>
+            <button class="btn-import btn-secondary" id="templateInfoBtn">Get the .xlsx template</button>
+          </div>
+          <div class="footnote import-note">Expects a workbook structured like the plant's "mass balance matrix" sheet (Raw Mill, Pet Coke, AF (Rice Husk), CKB, Electricity, Water, Clinker Production and %CaO/%MgO rows, Jan–Dec columns) — importing replaces the monthly production, fuel tonnage/LHV and electricity baselines below. Fuel composition (carbon %, ash %, air ratio, upstream EF) and any custom fuel rows are reset to default. CKD export tonnage is not in the import layout and resets to 0 — re-enter it in the CKD Correction card if your site exports CKD.</div>
+          <div class="import-banner" id="importBanner" hidden></div>
+          <details class="methodology template-ref">
+            <summary>Template layout reference</summary>
+            <div class="m-body footnote">
+              <div>Sheet name must be exactly <code>mass balance matrix</code>. Two month-column blocks, Jan→Dec left to right:</div>
+              <div class="ref-table-wrap">
+                <table class="ref-table">
+                  <thead><tr><th>Row</th><th>Field</th><th>Columns</th></tr></thead>
+                  <tbody>
+                    <tr><td class="rownum">4</td><td>Month headers (Jan…Dec)</td><td class="colspan">E–P</td></tr>
+                    <tr><td class="rownum">6</td><td>Raw Mill (raw meal, wet, t)</td><td class="colspan">E–P</td></tr>
+                    <tr><td class="rownum">7</td><td>Inbound moisture content (%)</td><td class="colspan">E–P</td></tr>
+                    <tr><td class="rownum">9</td><td>Pet Coke — mass (t) / LHV (kcal/kg)</td><td class="colspan">E–P / S–AD</td></tr>
+                    <tr><td class="rownum">10</td><td>AF (Rice Husk) — mass (t) / LHV (kcal/kg)</td><td class="colspan">E–P / S–AD</td></tr>
+                    <tr><td class="rownum">11</td><td>CKB — mass (t) / LHV (kcal/kg)</td><td class="colspan">E–P / S–AD</td></tr>
+                    <tr><td class="rownum">12</td><td>Electricity Clinker Burning (kWh)</td><td class="colspan">E–P</td></tr>
+                    <tr><td class="rownum">14</td><td>Water for Cooling Machine (m³)</td><td class="colspan">E–P</td></tr>
+                    <tr><td class="rownum">15</td><td>Month headers (Jan…Dec)</td><td class="colspan">S–AD</td></tr>
+                    <tr><td class="rownum">16</td><td>Clinker Production (t) / %CaO in clinker</td><td class="colspan">E–P / S–AD</td></tr>
+                    <tr><td class="rownum">17</td><td>%MgO in clinker</td><td class="colspan">S–AD</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div>Leave a month blank or 0 if not yet reported. Fuel composition (carbon %, ash %, air ratio) and upstream/grid EFs aren't part of this file — set those in the Fuels table and Background Parameters &amp; Emission Factors panel after importing.</div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd">
+          <h2>Production &amp; Raw Meal Chemistry</h2>
+          <button class="btn-reset" id="resetProduction">Reset to baseline</button>
+        </div>
+        <div class="card-bd">
+          <div class="field-grid" id="productionFields"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd">
+          <h2>Fuels &amp; Combustion</h2>
+          <span class="hint">as-fired basis, per-fuel properties</span>
+        </div>
+        <div class="card-bd">
+          <div class="fuel-table-wrap">
+            <table class="fuel-table" id="fuelTable">
+              <thead>
+                <tr>
+                  <th>Fuel</th><th>Type</th><th>Mass<br>(t, as-fed)</th><th>Moisture<br>(%, as-fired)</th>
+                  <th>LHV<br>(MJ/kg, as-fired)</th><th>Carbon %<br>(as-fired)</th><th>H %<br>(as-fired)</th><th>O %<br>(as-fired)</th><th>S %<br>(as-fired)</th><th>Ash %<br>(as-fired)</th>
+                  <th>Biogenic<br>C share (%)</th><th>Air ratio<br>(kg/kg fuel, calc.)</th><th></th>
+                </tr>
+              </thead>
+              <tbody id="fuelTbody"></tbody>
+            </table>
+          </div>
+          <div class="fuel-add-row">
+            <select class="add-fuel-btn" id="fuelLibrarySel" aria-label="Add a fuel from the library"></select>
+            <button class="add-fuel-btn" id="addFuelBtn">+ Add blank fuel / alternative fuel stream</button>
+          </div>
+          <details class="calc-dd" id="fuelConv">
+            <summary>Convert dry-basis lab data to as-fired</summary>
+            <div class="calc-dd-body">
+              <p class="conv-lead">Use only when a lab report gives values on a dry basis. Fill in what the report has and leave the rest blank; blank fields are left unchanged.</p>
+              <div class="field-grid cols-3" id="fuelConvFields">
+                <label class="field"><span class="lbl">Apply to fuel</span><div class="input-wrap"><select id="conv_fuel"></select></div></label>
+                <label class="field"><span class="lbl">Moisture (wet basis)</span><div class="input-wrap"><input type="number" id="conv_M" step="0.1" min="0" max="99"><span class="input-unit">%</span></div></label>
+                <label class="field"><span class="lbl">LHV (dry)</span><div class="input-wrap"><input type="number" id="conv_lhv" step="0.1" min="0"><span class="input-unit">MJ/kg</span></div></label>
+                <label class="field"><span class="lbl">Carbon (dry)</span><div class="input-wrap"><input type="number" id="conv_C" step="0.1" min="0" max="100"><span class="input-unit">%</span></div></label>
+                <label class="field"><span class="lbl">Ash (dry)</span><div class="input-wrap"><input type="number" id="conv_ash" step="0.1" min="0" max="100"><span class="input-unit">%</span></div></label>
+                <label class="field"><span class="lbl">H (dry)</span><div class="input-wrap"><input type="number" id="conv_H" step="0.1" min="0" max="100"><span class="input-unit">%</span></div></label>
+                <label class="field"><span class="lbl">O (dry)</span><div class="input-wrap"><input type="number" id="conv_O" step="0.1" min="0" max="100"><span class="input-unit">%</span></div></label>
+                <label class="field"><span class="lbl">S (dry)</span><div class="input-wrap"><input type="number" id="conv_S" step="0.01" min="0" max="100"><span class="input-unit">%</span></div></label>
+              </div>
+              <div class="conv-out" id="conv_preview">Enter the moisture and at least one dry-basis value.</div>
+              <button class="btn-import" id="conv_apply" disabled>Apply as-fired values to this fuel</button>
+            </div>
+          </details>
+          <div class="subhead" style="margin-top:14px;">Combustion parameters</div>
+          <div class="field-grid" id="combustionFields"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd">
+          <h2>Auxiliary Inputs</h2>
+        </div>
+        <div class="card-bd">
+          <div class="field-grid" id="auxFields"></div>
+        </div>
+      </div>
+
+      <div class="card" id="mbAssumptionsPanel">
+        <div class="card-hd">
+          <h2>Mass balance assumptions</h2>
+          <span class="hint">modelling settings, not plant data</span>
+        </div>
+        <div class="card-bd">
+          <div class="field-grid cols-2x" id="mbFields"></div>
+        </div>
+      </div>
+
+      <div class="card" id="ckdPanel">
+        <div class="card-hd">
+          <h2>CFckd calculation</h2>
+        </div>
+        <div class="card-bd">
+          <div id="ckdBasisLine" style="margin-bottom:12px;"></div>
+          <div class="field-grid" id="ckdFields"></div>
+          <div class="footnote" id="ckdEnterHint" style="margin-top:8px;"></div>
+          <details class="calc-dd" id="ckdCalc">
+            <summary>Show calculation</summary>
+            <div class="calc-dd-body">
+              <div class="mb-side" id="ckdReadout" style="margin-top:6px;"></div>
+              <div class="trace-note" id="traceCkd"></div>
+            </div>
+          </details>
+          <div class="footnote" style="margin-top:10px;">Leave the amount at 0 for a closed-loop kiln (all dust returns to kiln feed): CFckd is then exactly 1.000 and nothing changes. Enter CKD only if it did <b>not</b> go back into the kiln feed. When an amount is entered it also replaces the bypass-dust % in Method II, so both methods describe the same dust loss. Dust that escapes uncaptured (vented) also counts — add it to the amount. <b>Allocation:</b> exported CKD follows a cut-off approach — the CO₂ released in this kiln stays in this plant's Scope 1 and is allocated entirely to clinker/cement, and the CKD leaves the gate carrying no allocated burden.</div>
+        </div>
+      </div>
+
+      <details class="card settings-panel" id="bgParamsPanel" open>
+        <summary>
+          <div class="sp-title">
+            <div>
+              <h2>Background Parameters &amp; Emission Factors <span class="sp-sub">(SimaPro / IPCC)</span></h2>
+              <span class="hint">grid + upstream constants · audit &amp; edit here</span>
+            </div>
+            <span class="status-pill status-good" title="Missing or unextracted factors default to 0 and stay visibly flagged — never averaged or estimated on your behalf.">🔒 Strict Audit Mode</span>
+          </div>
+          <span class="sp-chevron">▸</span>
+        </summary>
+        <div class="card-bd">
+          <div class="footnote" style="margin-bottom:2px;"><b>Strict Audit Mode</b> — every factor below is either a logged, sourced value (green), a flagged inferred placeholder (amber), explicitly unverified and held at 0 (red), or intentionally excluded as out-of-boundary (gray). Nothing here is a guessed or averaged industry figure standing in for missing data.</div>
+
+          <div class="subhead" style="margin-top:16px;">Grid electricity (Scope 2)</div>
+          <div class="field-grid" id="gridEfField"></div>
+          <div class="footnote" style="margin-top:8px;">Not in the source workbook, but sourced from the plant's own SimaPro export (<i>Electricity, medium voltage {TH} | market for</i>, IPCC 2021 GWP100 V1.03): fossil GWP100 = 0.78302899 kg CO₂e/kWh, used as the headline figure here. Two small components from the same export are kept as memo-only, not folded into this number — biogenic 0.0020634 kg CO₂e/kWh and land-transformation 0.0013508 kg CO₂e/kWh — consistent with how this console keeps biogenic CO₂ out of gross Scope 1 totals elsewhere. Edit the field above if your utility contract or a newer export gives a different figure.</div>
+
+          <div class="subhead" style="margin-top:16px;">Upstream / Scope 3 — background material EFs</div>
+          <div class="ef-wrap">
+          <table class="ef-table" id="upstreamEfTable">
+            <colgroup><col class="c-mat"><col class="c-cls"><col class="c-ef"><col class="c-src"></colgroup>
+            <thead><tr><th>Material / fuel</th><th>Classification</th><th class="th-ef">Upstream EF (kg CO₂e/t)</th><th>Source / audit status</th></tr></thead>
+            <tbody id="upstreamEfTbody"></tbody>
+          </table>
+          </div>
+          <div class="footnote" style="margin-top:10px;">Well-to-gate (extraction, processing, transport) emissions embedded in each purchased fuel — kept separate from the Scope-1 pyroprocess totals above. Petcoke defaults to 600.00 kg CO₂e/t (SimaPro export). <b>CKB defaults to 679.38 kg CO₂e/t</b>, also a SimaPro export — but as a <b>Heavy Fuel Oil proxy</b> (no direct cracker-bottom LCA dataset exists; HFO stands in as the nearest available process), so treat it as an approximation, not a CKB-specific figure. Two small components from that same CKB export are memo-only and not folded into the 679.38 headline: biogenic 0.186 kg CO₂e/t and land-transformation 0.191 kg CO₂e/t. Rice Husk remains 0 and flagged <b>Unverified</b> — no SimaPro/ecoinvent/DEFRA figure has been extracted for it yet, so Strict Audit Mode leaves it at 0 rather than assuming an average on your behalf. <i>LCA note on Rice Husk (ⓘ above):</i> biomass-fuel LCA literature conventionally treats an agricultural residue/waste like rice husk as ~0 kg CO₂e/t upstream when it carries no dedicated cultivation or processing burden — kept flagged Unverified here pending a formal citation, not because the 0 is considered wrong. Replace either with your own database or supplier value when available.</div>
+        </div>
+      </details>
+
+    </div>
+
+    <!-- RIGHT: RESULTS -->
+    <div class="col">
+
+      <div class="card">
+        <div class="card-hd">
+          <h2>Calcination CO₂</h2>
+          <span class="status-pill" id="calcMethodStatusPill"></span>
+        </div>
+        <div class="card-bd">
+          <div class="compare-row">
+            <div class="compare-item">
+              <div class="compare-hd"><span class="name">Method I — Clinker XRF stoichiometry</span><span class="num" id="calcStoichVal">–</span></div>
+              <div class="compare-track"><div class="compare-fill tone-mineral tone-fill" id="calcStoichBar"></div></div>
+            </div>
+            <div class="compare-item">
+              <div class="compare-hd"><span class="name">Method II — Mass-balance difference</span><span class="num" id="calcMassbalVal">–</span></div>
+              <div class="compare-track"><div class="compare-fill tone-mineral tone-fill stripe" id="calcMassbalBar"></div></div>
+            </div>
+          </div>
+          <div class="footnote" id="calcMethodNote" style="margin-top:10px;"></div>
+          <div class="trace-note" id="traceCalcination"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd"><h2>Kiln Combustion CO₂ — Fossil vs. Biogenic</h2><span class="hint">t CO₂e, fuel burning only</span></div>
+        <div class="card-bd">
+          <div class="stackbar" id="combustionSplitStack"></div>
+          <div class="legend-row" id="combustionSplitLegend"></div>
+          <div class="footnote" style="margin-top:8px;">Fossil combustion CO₂ = Petcoke + CKB burning. Biogenic combustion CO₂ = Rice Husk burning, reported separately per GHG Protocol/ISO convention — never netted against the fossil total. This is combustion only; calcination CO₂ (always fossil, from raw-meal decomposition) is tracked separately below.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd"><h2>Combustion vs. Calcination</h2><span class="hint">kg CO₂ this period</span></div>
+        <div class="card-bd">
+          <div class="stackbar" id="ccStack"></div>
+          <div class="legend-row" id="ccLegend"></div>
+          <div class="trace-note" id="traceCombustion"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd"><h2>Two-Step SKU Allocation</h2></div>
+        <div class="card-bd">
+          <div class="field-grid" id="skuFields"></div>
+          <div class="compare-row" style="margin-top:12px;">
+            <div class="compare-item">
+              <div class="compare-hd"><span class="name">Step 1 — Specific clinker intensity</span><span class="num" id="skuStep1">–</span></div>
+              <div class="compare-track"><div class="compare-fill tone-ink tone-fill" id="skuStep1Bar"></div></div>
+            </div>
+            <div class="compare-item">
+              <div class="compare-hd"><span class="name">Step 2 — Final SKU footprint</span><span class="num" id="skuStep2">–</span></div>
+              <div class="compare-track"><div class="compare-fill tone-ink tone-fill stripe" id="skuStep2Bar"></div></div>
+            </div>
+          </div>
+          <div class="trace-note" id="traceSkuFinal"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd"><h2>Mass Balance — Block Flow Diagram</h2><span class="hint">t, this period</span></div>
+        <div class="card-bd">
+          <figure style="margin:0;">
+            <div class="bfd-svg-wrap">
+              <svg class="bfd-svg" id="bfdSvg" width="600" height="320" viewBox="0 0 600 320" role="img" aria-label="Block flow diagram of mass inputs and outputs around the pyroprocess kiln system"></svg>
+            </div>
+            <figcaption class="footnote" id="bfdCaption" style="margin-top:8px;"></figcaption>
+          </figure>
+          <div class="legend-row" style="margin-top:2px;">
+            <span class="legend-item"><span class="dot tone-mineral tone-fill"></span>Raw meal / calcination</span>
+            <span class="legend-item"><span class="dot tone-fire tone-fill"></span>Fuel / combustion</span>
+            <span class="legend-item"><span class="dot tone-ink tone-fill"></span>Utility (air, water, moisture)</span>
+            <span class="legend-item"><span class="dot" style="background:var(--ink-900)"></span>Clinker (product)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd">
+          <h2>Mass Balance Closure Check</h2>
+          <span class="status-pill" id="mbStatusPill"></span>
+        </div>
+        <div class="card-bd">
+          <div class="mb-flow">
+            <div class="mb-side" id="mbInSide"></div>
+            <div class="mb-arrow">
+              <span class="mb-delta" id="mbDelta">–</span>
+              <span style="font-size:16px;color:var(--ink-400);">⇄</span>
+            </div>
+            <div class="mb-side" id="mbOutSide"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd"><h2>Scope 2 (Electricity) Emissions</h2><span class="hint">grid EF × electricity use</span></div>
+        <div class="card-bd">
+          <div class="mb-side" id="scope2Headline"></div>
+          <details class="calc-dd" id="scope2Calc">
+            <summary>Show calculation</summary>
+            <div class="calc-dd-body">
+              <div class="mb-side" id="scope2Breakdown"></div>
+              <div class="trace-note" id="traceScope2"></div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd"><h2>Upstream (Scope 3) Emissions</h2><span class="hint">background EF × input mass</span></div>
+        <div class="card-bd">
+          <div class="mb-side" id="upstreamHeadline"></div>
+          <details class="calc-dd" id="upstreamCalc">
+            <summary>Show calculation</summary>
+            <div class="calc-dd-body">
+              <div class="mb-side" id="upstreamBreakdown"></div>
+              <div class="trace-note" id="traceUpstream"></div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd"><h2>12-Month Trend</h2><span class="hint">kg CO₂ / t clinker</span></div>
+        <div class="card-bd">
+          <div class="trend-wrap"><svg class="trend-chart" id="trendChart" width="600" height="190" viewBox="0 0 600 190"></svg></div>
+          <div class="legend-row" id="trendLegend"></div>
+        </div>
+      </div>
+
+      <div class="card" id="methodologyCard">
+        <div class="card-bd">
+          <details class="methodology">
+            <summary>Methodology &amp; formulas</summary>
+            <div class="m-body footnote">
+              <div><b>Combustion CO₂</b> (per fuel) = as-fed fuel mass × carbon %(as-fired) × <code>44/12</code> × oxidation factor (OF). <b>Every fuel property is entered on an as-fired basis</b> (carbon, H, O, S, ash and LHV), matching the as-fed tonnage and the way the plant laboratory reports them, so no moisture correction is applied to CO₂ — fuel moisture is used only in the mass and water balance (dry fuel mass = as-fed mass × (1 − moisture %); the moisture leaves as water vapour). Lab results reported on a dry basis are converted before entry with <code>X<sub>ar</sub> = X<sub>dry</sub> × (1 − M)</code> for elemental and ash fractions and <code>LHV<sub>ar</sub> = LHV<sub>dry</sub> × (1 − M) − 2.443 × M</code> (MJ/kg, M = wet-basis moisture fraction; 2.443 MJ/kg is the latent heat of water at 25 °C) — the <b>Convert dry-basis lab data</b> helper under the fuel table does this. This is pure IPCC mass/carbon-balance accounting — <b>LHV plays no part in this formula</b>. LHV is used only for the separate Thermal energy metric below (a heat-input memo figure), never to derive CO₂. Fossil/biogenic split follows each fuel's biogenic carbon share — set manually via the <b>Type</b> column (Fossil / Biogenic / Mixed) rather than inferred, since supplier data rarely states it rigorously; choosing "Mixed" unlocks a custom biogenic-share % for blended streams (e.g. RDF).</div>
+              <div><b>Calcination CO₂ — two independent methods, cross-checked</b>: <b>Method I</b> (clinker XRF stoichiometry) = clinker mass × (%CaO × <code>44.01/56.08</code> + %MgO × <code>44.01/40.30</code>) × CFckd (see the CKD correction paragraph below), using %CaO/%MgO as measured on the clinker — the same basis as the plant's own SKU-allocation sheet. <b>Method II</b> (mass-balance difference) = dry raw meal + retained fuel ash − clinker − bypass dust — whatever solid mass didn't come out as clinker or dust is assumed to have left as calcination CO₂ (this reproduces the plant workbook's own mass-balance calcination figure). The <b>Calcination CO₂ — Dual-Method Cross-Check</b> card shows both, live, with the %-delta between them as a convergence check; Method I feeds every GWP figure below, since it doesn't depend on the mass balance closing. The delta is graded against a set tolerance (default ±5% = Converged, up to twice that = Check assumptions, beyond = Diverging; editable in Mass balance assumptions). A large or growing delta between the two is itself a diagnostic — it means the mass balance (raw meal in, clinker out, dust/bypass losses) and the clinker chemistry assay disagree about how much carbonate actually decomposed.</div>
+              <div><b>CKD correction (CFckd)</b> — Method I is IPCC's Tier 2 form, <code>Mcl × EFcl × CFckd</code>, where EFcl comes from this plant's own clinker assay and <code>CFckd = 1 + (Md/Mcl) × Cd × Fd × (EFc/EFcl)</code> (IPCC 2006 Vol. 3 Eq. 2.5; EFc = 0.43971 t CO₂/t CaCO₃, Table 2.1). Md is cement kiln dust <i>not recycled to the kiln</i>; Cd is its original carbonate fraction (defaults to the raw mix's, which IPCC allows); Fd is how much of that carbonate was already calcined. For this plant, operators confirmed on 2026-10-14 that CKD is recycled in a closed loop to kiln feed with no export and no bypass, so Md = 0 and CFckd = 1.000 — a verified value, not an omitted term. Sites that sell or send CKD off-site enter only the amount (t or kg), where it was measured (weighed at dispatch, fed to the cement mill, or captured at the dust filter with the returned part subtracted), and optionally a lab CO₂ analysis of the dust in the <b>CKD Correction</b> card. The console calculates Md, Cd (from the raw mix) and Fd (from the dust assay, or a conservative 1.0 without one) and then the factor; a measured amount also replaces the bypass-dust % in Method II, and the dual-method comparison then uses Method I <i>after</i> CFckd so both describe all CO₂ released in the kiln. <b>Allocation</b>: exported CKD is treated with a cut-off approach — the kiln's CO₂ stays in this plant's Scope 1 and is allocated entirely to clinker/cement, and the CKD leaves the gate with no allocated burden. This is a provisional methodological choice; it should be revisited if CKD ever becomes a revenue-bearing co-product.</div>
+              <div><b>Thermal energy</b> = Σ (as-fed fuel mass × LHV), reported as GJ and as specific heat consumption (MJ / t clinker) — independent of the mass-based CO₂ calc above.</div>
+              <div><b>Mass balance</b>: Inputs = dry raw meal + raw-meal moisture + dry fuel + fuel moisture + combustion air (Σ as-fed fuel × stoichiometric air ratio × excess-air factor; the air ratio is calculated per kg of fuel as fired from each fuel's as-fired C, H, O, S as 11.51·C + 34.34·(H − O/8) + 4.31·S, and the plant's three original fuels keep the plant's own constants) + process water. Outputs = clinker + calcination CO₂ + combustion CO₂ + water vapour released + water discharged + fuel ash to dust/bypass + raw-meal bypass dust + unreacted air (air − O₂ consumed, O₂ ≈ combustion CO₂ × 32/44). Closure = (In − Out) / In. Bypass-dust loss defaults to 0% (the plant runs 100% closed-loop dust recycling) and quench-water evaporation defaults to 100% (the plant's water balance closes at exactly 0 on that assumption).</div>
+              <div><b>SKU allocation</b>: Step 1 divides total Scope-1 pyroprocess CO₂ (calcination + combustion, fossil-reported) by clinker production. Step 2 multiplies by the selected clinker-to-cement factor. The SKU list is the plant's product portfolio; product-specific clinker-to-cement ratios are not yet available, so all default to 0.92 — edit per product.</div>
+              <div><b>Scope 2 (Electricity)</b> = electricity (burning + quench) × grid emission factor, shown in its own card with a per-t-clinker figure. Reported separately and <b>not</b> included in the Scope-1 pyroprocess totals above, to avoid mixing emission scopes. The grid factor is not in the plant's source workbook; the grid factor is sourced from the plant's own SimaPro export (see Background Parameters &amp; Emission Factors panel).</div>
+              <div><b>Upstream (Scope 3)</b> = Σ (as-fed fuel mass × its background/upstream EF), set in the <b>Background Parameters &amp; Emission Factors</b> panel. These are well-to-gate (extraction, processing, transport) factors for purchased fuels — not combustion or calcination — and are kept out of the Scope-1 and Scope-2 figures above to avoid double counting. None of these EFs are in the plant's source workbook; Petcoke defaults to 600.00 kg CO₂e/t and CKB to 679.38 kg CO₂e/t, both SimaPro exports — CKB's is a <b>Heavy Fuel Oil proxy</b> (no direct cracker-bottom dataset exists), so treat it as an approximation. Rice Husk defaults to 0 as a Strict Audit Mode placeholder until you enter a supplier or database (e.g. ecoinvent, DEFRA) figure, which also matches biomass-LCA convention treating agricultural residue/waste with no dedicated cultivation burden as ~0 upstream. <b>Raw Meal is deliberately excluded</b> from this upstream calculation and locked at 0 in the panel — it's an on-site intermediate (crushed/ground from the plant's own limestone), not an external purchase, and its chemical footprint is already accounted for via the kiln calcination formula (CaCO₃ decomposition) and the raw mill's electricity draw. Treating it as an upstream purchase would create a system-boundary overlap and double-count that footprint.</div>
+              <div>Electricity's grid emission factor (Scope 2) is set in the <b>Background Parameters &amp; Emission Factors</b> panel, alongside the upstream EFs, since both are background constants rather than period-specific operational data.</div>
+              <div><b>Validated against the plant workbook</b>: for Jan–Jun, this console's combustion CO₂ (fossil 34,012 t / biogenic 1,965 t) and Method II calcination CO₂ (31,771 t) reproduce the workbook's own figures exactly — confirming carbon content, fuel mass, molecular-weight factors and the raw-meal/clinker mass balance all match. Over the same period Method I (clinker XRF, 537 kg/t) and Method II (mass balance, 552 kg/t) agree within ~2.8%, consistent with the workbook's overall mass balance closing to within 0.09%. The oxidation factor defaults to 1.0 (full oxidation): that is the IPCC 2006 Vol. 2 default for every fuel (Table 1.4), and the WBCSD/CSI Cement CO₂ Protocol treats all kiln fuel carbon as fully oxidised because kiln temperatures make unburnt carbon negligible. Change it only with a measured, plant-specific value. All fuel properties are on the as-fired basis that matches the reported tonnage (the plant's source calculation applies no dry-basis correction), and fuel moisture affects only the mass and water balance; it is 0% for the three plant fuels until a measured value is entered.</div>
+              <div>Production, fuel tonnage and %CaO/%MgO are the plant's actual Jan–Jul 2026 figures; electricity and process water are actual through Jun (Jul shows 0 — not yet metered in the source). Aug–Dec are 0 pending reporting, except %CaO/%MgO and fuel LHV, which the plant workbook already carries for the full year. Grid emission factor is not in this workbook, but is sourced from a separate SimaPro export (see Background Parameters &amp; Emission Factors panel) rather than a generic placeholder.</div>
+              <div><b>Import Monthly Data</b> (top of the left column) reads an uploaded <code>.xlsx</code> client-side (SheetJS — nothing is uploaded to a server) and replaces the baseline above with fresh figures from its "mass balance matrix" sheet: Raw Mill (row 6), inbound moisture (row 7), Pet Coke/AF (Rice Husk)/CKB mass (rows 9–11, cols E–P) and LHV (same rows, cols S–AD), Electricity (row 12), Water (row 14), Clinker Production (row 16) and %CaO/%MgO (rows 16–17, cols S–AD) — the same cells this console's own baseline data came from. It does not touch fuel composition (carbon %, ash %, air ratio), upstream EFs, or assumptions, since those aren't tracked monthly in the source file. The <b>Template layout reference</b> (same card) documents the exact sheet name, row labels and column layout for building or checking your own import file. No ready-to-fill <code>.xlsx</code> template is available yet; the import is a demo of the import path.</div>
+              <div><b>Calculation Trace &amp; Audit Note</b> — the small monospace line under Combustion CO₂, the active Calcination CO₂ method, Upstream (Scope 3) and Final SKU Intensity is generated live from the current inputs and state (which calcination method is toggled on, which upstream EFs are non-zero, the active SKU profile) — it names the exact formula and the numbers plugged into it for this period, so a figure can be audited without leaving the card it's shown in.</div>
+              <div><b>Mass Balance — Block Flow Diagram</b> (above the Mass Balance Closure Check card) draws the five major streams into and out of the kiln system — dry raw meal, fuel, combustion air, process water and feed moisture in; clinker, calcination CO₂, combustion CO₂, water vapour and unreacted air out — as live arrows sized only by the number next to them (not to visual scale), color-matched to the same convention used in the charts above (mineral = calcination/raw meal, fire = combustion/fuel). It's a simplified view: minor streams (water discharge, fuel ash to dust/bypass, raw-meal bypass dust) are left off the diagram for clarity and only appear in the Mass Balance Closure Check card's full audited breakdown directly below it.</div>
+              <div><b>Strict Audit Mode</b> (Background Parameters &amp; Emission Factors panel) — every upstream/background emission factor is tagged by provenance: <b>green</b> means it matches a logged source (e.g. Petcoke's or the grid factor's SimaPro export figure), <b>amber</b> means it needs attention — either a non-zero value with no recorded source (a placeholder, or a figure you've typed in yourself) or an unverified 0 with no data extracted for it yet. The console never substitutes a guessed industry-average number for a missing factor; it leaves it at 0 and flags it instead, so every downstream total stays traceable to either real data or a visibly marked gap.</div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="app-foot">
+    <span>Formulas follow IPCC 2006 Guidelines Vol. 3 Ch. 2 (Tier 2/3 mass-balance) and GCCA/CSI CO₂ &amp; Energy Protocol conventions.</span>
+    <span id="lastCalc"></span>
+  </footer>
+</div>
+
+<div class="tt" id="tooltip"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   1. BASELINE DATA
+   ============================================================ */
+var MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+// Loaded from the plant's own "mass balance matrix" / "conso-va" workbook (2026).
+// Production, fuel and %CaO/%MgO are ACTUAL monthly figures through Jul 2026 (Aug-Dec not yet
+// reported -> 0, editable). Electricity & process water are actual through Jun only (Jul-Dec -> 0).
+// %CaO / %MgO are clinker assays and ARE available for the full 12 months even where production isn't.
+var KCAL_TO_MJ = 0.004184;
+
+/* ============================================================
+   1a. PRODUCT LINE REGISTRY
+   Each entry is a complete, self-contained dataset (production, fuels,
+   SKUs, assumptions) that can be loaded into the engine below. Only
+   "whiteCement" is real, measured plant data. "grayOPC" is an
+   illustrative PROXY dataset — built for Step 1 of the multi-product
+   architecture work, not sourced from any real OPC line. Its numbers
+   are plausible order-of-magnitude figures (typical clinker chemistry,
+   typical fuel mix) but must not be read as measured data. Swap
+   PRODUCT_LINES.grayOPC's contents for a real workbook the same way
+   whiteCement's was built once one is available — nothing else in the
+   engine needs to change.
+   ============================================================ */
+var PRODUCT_LINES = {
+
+  whiteCement: {
+    label: "White Cement — SCG (real plant data)",
+    isProxy: false,
+    defaultSkuId: "scg-bag",
+    production: [
+      {clinker:9227.71,  rawMealWet:14474.96, moisturePct:0.8, caoPct:66.43, mgoPct:1.00, elecKWh:630917.72, waterM3:3167.81},
+      {clinker:9809.37,  rawMealWet:15062.27, moisturePct:0.8, caoPct:67.13, mgoPct:0.96, elecKWh:675034.39, waterM3:3354.75},
+      {clinker:11459.06, rawMealWet:17213.76, moisturePct:0.8, caoPct:67.13, mgoPct:0.96, elecKWh:775734.73, waterM3:4111.65},
+      {clinker:9334.56,  rawMealWet:14723.28, moisturePct:0.8, caoPct:67.55, mgoPct:0.97, elecKWh:666167.06, waterM3:3450.56},
+      {clinker:10028.83, rawMealWet:16838.16, moisturePct:0.8, caoPct:67.46, mgoPct:0.96, elecKWh:716606.76, waterM3:3496.73},
+      {clinker:7645.67,  rawMealWet:11683.96, moisturePct:0.8, caoPct:67.18, mgoPct:0.96, elecKWh:540117.33, waterM3:2701.87},
+      {clinker:11241.36, rawMealWet:17112.49, moisturePct:0.8, caoPct:67.11, mgoPct:0.97, elecKWh:0,         waterM3:0},
+      {clinker:0,        rawMealWet:0,        moisturePct:0.8, caoPct:67.49, mgoPct:0.97, elecKWh:0,         waterM3:0},
+      {clinker:0,        rawMealWet:0,        moisturePct:0.8, caoPct:67.53, mgoPct:0.98, elecKWh:0,         waterM3:0},
+      {clinker:0,        rawMealWet:0,        moisturePct:0.8, caoPct:67.93, mgoPct:0.97, elecKWh:0,         waterM3:0},
+      {clinker:0,        rawMealWet:0,        moisturePct:0.8, caoPct:67.76, mgoPct:0.96, elecKWh:0,         waterM3:0},
+      {clinker:0,        rawMealWet:0,        moisturePct:0.8, caoPct:67.60, mgoPct:0.97, elecKWh:0,         waterM3:0}
+    ],
+    // baseline fuel definitions: real monthly as-fed mass (ton) and monthly LHV assay (kcal/kg -> MJ/kg).
+    // Carbon %, ash %, air ratio are the plant's own fuel-composition constants (not tracked monthly).
+    fuels: [
+      { id:"petcoke", name:"Petcoke", category:"fossil", carbonPct:89, moisturePct:0, biogenicPct:0, ashPct:0, airRatio:11.716, efUpstream:600.00, efSource:"SimaPro export",
+        mass:[1554.51,1650.95,1975.35,1615.29,1780.67,1378.25,1986.77,0,0,0,0,0],
+        lhvKcal:[8325.37,8297.34,8240.58,8233.00,8188.53,8325.04,8272.90,8359.94,8373.03,8399.71,8334.04,8230.73] },
+      { id:"ricehusk", name:"Rice Husk", category:"biogenic", carbonPct:39, moisturePct:0, biogenicPct:100, ashPct:0, airRatio:4.70235, efUpstream:0, efSource:null,
+        mass:[225.71,239.05,322.35,218.96,267.89,100.32,297.94,0,0,0,0,0],
+        lhvKcal:[3515.23,3504.61,3471.37,3536.32,3352.49,3455.54,3591.28,3568.74,3568.41,3589.54,3577.47,3554] },
+      { id:"ckb", name:"CKB (Cracker Bottom)", category:"fossil", carbonPct:89.5, moisturePct:0, biogenicPct:0, ashPct:0, airRatio:13.50095, efUpstream:679.38346, efSource:"SimaPro export (HFO proxy)",
+        mass:[78.04,77.01,83.04,96.07,82.76,48.02,83.10,0,0,0,0,0],
+        lhvKcal:[9439,9439,9439,9439,9439,9432,9456,9456,9418,9454,9454,9422] }
+    ],
+    // real SKU portfolio (from the plant's cement-grinding sheet). Clinker-to-cement ratio is not
+    // specified in the source mix-design rows (they were left blank) -> defaulted to 0.92, editable.
+    skus: [
+      { id:"scg-bag",     name:"SCG Low Carbon White Cement (Bag) 40kg — EL06",           factor:0.92 },
+      { id:"scg-bulk",    name:"SCG Low Carbon White Cement (Bulk) 1T — EL06",            factor:0.92 },
+      { id:"montania-bag",name:"Montania Low Carbon White Cement (Bag) 40kg — EL05",      factor:0.92 },
+      { id:"montania-blk",name:"Montania Low Carbon White Cement (Bulk) 1T — EL06",       factor:0.92 },
+      { id:"montania-big",name:"Montania Low Carbon White Cement (Bigbag) 1T — EL06",     factor:0.92 },
+      { id:"tiger-terr",  name:"Tiger Décor White Cement, Terrazzo (Bag) 40kg — EL06",    factor:0.92 },
+      { id:"tiger-multi", name:"Tiger Décor White Cement, Multi-Purpose (Bag) 20kg — TI04", factor:0.92 },
+      { id:"custom",      name:"Custom profile",                                          factor:0.92 }
+    ],
+    assumptions: {
+      OF: 1.0,               // IPCC 2006 Vol.2 Table 1.4 default is 1 (full oxidation) for every fuel; CSI Cement CO2 Protocol treats all kiln fuel carbon as fully oxidised. Lower only with a measured, plant-specific value.
+      calcTolPct: 5,         // I/II convergence tolerance (±%): converged within it, 'check' up to 2x, 'diverging' beyond
+      excessAirFactor: 1.0771,
+      bypassDustPct: 0,       // plant runs 100% closed-loop dust recycling - no CKD bypass loss assumed
+      ashLossFraction: 0,
+      waterEvapFraction: 100, // source water balance closes at 0 -> all quench water assumed to evaporate
+      // Grid electricity EF — SimaPro export (Electricity, medium voltage {TH} | market for), IPCC 2021 GWP100 V1.03.
+      // Headline figure = fossil component only (0.78302899 kg CO2-eq/kWh), matching this console's convention of
+      // keeping biogenic CO2 out of gross Scope 1/2 totals (reported as a memo instead, same as combustion CO2 above).
+      // Land-use-change ("land transformation") component is a small additive, non-biogenic GWP contributor — logged
+      // separately below (gridFactorLandTransform) rather than folded silently into the headline number.
+      gridFactor: 0.78302899,
+      gridFactorSource: "SimaPro export",
+      gridFactorSourceValue: 0.78302899,
+      gridFactorBiogenic: 0.0020633512,       // kg CO2-eq/kWh, SimaPro export — memo only, not in the headline gridFactor
+      gridFactorLandTransform: 0.0013508079,  // kg CO2-eq/kWh, SimaPro export — memo only, not in the headline gridFactor
+      // CKD correction (IPCC 2006 Vol.3 Ch.2 Eq. 2.5). Plant operators confirmed 2026-10-14: closed-loop CKD recycling to
+      // kiln feed, no CKD export, no bypass -> Md = 0 -> CFckd = 1.000 (verified, not an omitted term). Fd/Cd below only
+      // matter for sites that DO export CKD (enter tonnes in the CKD Correction card); Cd = 0 means "derive from the raw mix".
+      // User inputs for CKD are tonnage + WHERE it was measured (ckdPoint) + an optional lab CO2 content of the dust.
+      // Md, Cd and Fd are calculated by computeCfckd(), never typed in. No assay (0) -> Fd falls back to 1.0 (conservative).
+      ckdPoint: "dispatch",   // "dispatch" (weighed out, sold/off-site) | "cementmill" (fed to cement mill) | "captured" (total caught by the dust filter)
+      ckdAssayCO2Pct: 0,      // lab CO2 content (or LOI corrected for moisture) of the CKD, % by mass; 0 = not measured
+      ckdBasis: "Closed-loop CKD recycling to kiln feed, no export, no bypass — operator-confirmed 2026-10-14",
+      ckdBasisVerified: true,
+      rawMealEF: 0            // kept for backward compatibility only - the UI field is disabled/locked at 0 and
+                               // calc() no longer reads this value at all (see the upstreamRawMeal_kg comment in calc()).
+                               // Raw meal is an on-site intermediate (plant's own limestone), not an external upstream
+                               // purchase - an external cradle-to-gate EF here would double-count the kiln calcination
+                               // (Scope 1) and raw mill electricity (Scope 2) footprint already captured elsewhere.
+    }
+  },
+
+  grayOPC: {
+    label: "Gray OPC — generic proxy (illustrative, not measured)",
+    isProxy: true,
+    defaultSkuId: "opc-generic-bag",
+    // PROXY DATA — round, illustrative monthly figures for an ordinary Portland cement (Type I)
+    // line. %CaO sits in the same broad range as white cement (calcination chemistry doesn't
+    // depend on color), but %MgO is set higher (~2.5% vs ~1%) since OPC has no whiteness-driven
+    // pressure toward low-iron/low-MgO limestone sources. Replace this whole block with a real
+    // workbook-derived dataset (same shape as whiteCement above) when one is available.
+    production: [
+      {clinker:10000, rawMealWet:15800, moisturePct:1.0, caoPct:65.0, mgoPct:2.5, elecKWh:680000, waterM3:3400},
+      {clinker:10200, rawMealWet:16100, moisturePct:1.0, caoPct:64.8, mgoPct:2.6, elecKWh:693000, waterM3:3470},
+      {clinker:9800,  rawMealWet:15500, moisturePct:1.0, caoPct:65.2, mgoPct:2.4, elecKWh:667000, waterM3:3335},
+      {clinker:10500, rawMealWet:16600, moisturePct:1.0, caoPct:65.0, mgoPct:2.5, elecKWh:714000, waterM3:3570},
+      {clinker:10100, rawMealWet:15950, moisturePct:1.0, caoPct:64.9, mgoPct:2.5, elecKWh:687000, waterM3:3434},
+      {clinker:9600,  rawMealWet:15200, moisturePct:1.0, caoPct:65.1, mgoPct:2.4, elecKWh:653000, waterM3:3264},
+      {clinker:10300, rawMealWet:16300, moisturePct:1.0, caoPct:65.0, mgoPct:2.6, elecKWh:701000, waterM3:3502},
+      {clinker:10400, rawMealWet:16450, moisturePct:1.0, caoPct:64.9, mgoPct:2.5, elecKWh:707000, waterM3:3536},
+      {clinker:9900,  rawMealWet:15650, moisturePct:1.0, caoPct:65.1, mgoPct:2.4, elecKWh:673000, waterM3:3366},
+      {clinker:10200, rawMealWet:16100, moisturePct:1.0, caoPct:65.0, mgoPct:2.5, elecKWh:693000, waterM3:3468},
+      {clinker:10050, rawMealWet:15870, moisturePct:1.0, caoPct:64.8, mgoPct:2.6, elecKWh:684000, waterM3:3417},
+      {clinker:9950,  rawMealWet:15720, moisturePct:1.0, caoPct:65.2, mgoPct:2.4, elecKWh:678000, waterM3:3383}
+    ],
+    // PROXY fuels: a coal-fired OPC kiln is the typical global case, so the roster is intentionally
+    // different in both count and composition from the White Cement line (2 fuels, not 3; nonzero
+    // ash — OPC has no ash-purity constraint since color isn't a concern). Petcoke reuses the same
+    // verified SimaPro upstream EF as the White Cement line (it's the same physical fuel regardless
+    // of which kiln burns it); Coal has no logged EF yet, so it's honestly left at 0/Unverified.
+    fuels: [
+      { id:"coal", name:"Coal (bituminous, proxy)", category:"fossil", carbonPct:65, moisturePct:8, biogenicPct:0, ashPct:14, airRatio:9.5, efUpstream:0, efSource:null,
+        // ~0.12 t coal per t clinker (~3.1 GJ/t at this LHV) — in the realistic range for a modern
+        // OPC kiln; scaled directly off each month's proxy clinker figure above.
+        mass:[1200,1224,1176,1260,1212,1152,1236,1248,1188,1224,1206,1194],
+        lhvKcal:[6200,6180,6210,6190,6200,6215,6195,6180,6205,6190,6200,6210] },
+      { id:"petcoke", name:"Petcoke", category:"fossil", carbonPct:89, moisturePct:0, biogenicPct:0, ashPct:2, airRatio:11.716, efUpstream:600.00, efSource:"SimaPro export (reused from White Cement line — same fuel)",
+        // ~0.01 t per t clinker — a small supplementary fuel alongside coal, not the primary fuel.
+        mass:[100,102,98,105,101,96,103,104,99,102,101,100],
+        lhvKcal:[8300,8300,8300,8300,8300,8300,8300,8300,8300,8300,8300,8300] }
+    ],
+    // PROXY SKUs — a generic Type I portfolio, not a real customer's product list.
+    skus: [
+      { id:"opc-generic-bag",  name:"Generic OPC Type I (Bag) 50kg — proxy",  factor:0.95 },
+      { id:"opc-generic-bulk", name:"Generic OPC Type I (Bulk) — proxy",      factor:0.96 },
+      { id:"custom",           name:"Custom profile",                        factor:0.95 }
+    ],
+    assumptions: {
+      OF: 1.0,               // IPCC 2006 Vol.2 Table 1.4 default (full oxidation); no plant-specific value exists for a proxy line
+      calcTolPct: 5,
+      excessAirFactor: 1.15, // generic illustrative assumption, not measured
+      bypassDustPct: 3,      // typical OPC kilns run a chloride/sulfur bypass — unlike the White Cement line's 100% closed loop
+      ashLossFraction: 5,
+      waterEvapFraction: 100,
+      gridFactor: 0.78302899,
+      gridFactorSource: null,       // reused the White Cement line's SimaPro figure as a stand-in — confirm the real grid region before treating this as sourced
+      gridFactorSourceValue: null,
+      gridFactorBiogenic: 0,
+      gridFactorLandTransform: 0,
+      ckdPoint: "dispatch",
+      ckdAssayCO2Pct: 0,
+      ckdBasis: null,           // proxy line: no CKD handling evidence on file
+      ckdBasisVerified: false,
+      rawMealEF: 0
+    }
+  }
+};
+
+// Every production row carries a CKD-export tonnage (Md, t of CKD leaving the kiln system). Default 0.
+// ckdExport = tonnes of CKD measured at the point chosen in assumptions.ckdPoint; ckdReturned = tonnes of that returned to kiln feed
+// (only used when the measuring point is the dust filter, i.e. total captured).
+function ensureCkdField(rows){ rows.forEach(function(r){ if(typeof r.ckdExport !== "number") r.ckdExport = 0; if(typeof r.ckdReturned !== "number") r.ckdReturned = 0; }); return rows; }
+Object.keys(PRODUCT_LINES).forEach(function(k){ ensureCkdField(PRODUCT_LINES[k].production); });
+
+var MONTHLY_PRODUCTION = PRODUCT_LINES.whiteCement.production;
+var FUEL_DEFS = PRODUCT_LINES.whiteCement.fuels;
+var SKU_PROFILES = PRODUCT_LINES.whiteCement.skus;
+var DEFAULT_ASSUMPTIONS = PRODUCT_LINES.whiteCement.assumptions;
+
+var COLORS = {
+  fossilCombustion:"var(--accent-fire)",
+  biogenicCombustion:"var(--accent-bio)",
+  calcination:"var(--accent-mineral)"
+};
+
+/* ============================================================
+   2. STATE
+   ============================================================ */
+var state = {
+  productLine: "whiteCement", // key into PRODUCT_LINES — which dataset is currently loaded
+  span: 0,                 // 0-11 month index, or "YTD"
+  production: null,        // {clinker, rawMealWet, moisturePct, caoPct, mgoPct, elecKWh, waterM3}
+  fuels: [],                // working copy of fuel rows
+  assumptions: null,
+  skuProfileId: "scg-bag",
+  skuFactor: 0.92,
+  fuelSeq: 0,
+  ckdUnit: "t",            // display unit for the CKD amount inputs (values are stored in tonnes)
+  calcMethod: "stoich"     // "stoich" (clinker XRF, default) or "massbal" (mass-balance difference)
+};
+
+// Swaps the entire active dataset (production, fuels, SKUs, assumptions) to a different product
+// line's PRODUCT_LINES entry, then reloads the current timespan and re-renders everything. The
+// calculation engine itself (calc(), loadTimespan(), etc.) never changes — only which numbers it
+// reads change, which is the whole point of this architecture: the same chemistry/mass-balance
+// formulas run against whichever dataset is active.
+function switchProductLine(lineId){
+  var line = PRODUCT_LINES[lineId];
+  if(!line) return;
+  state.productLine = lineId;
+  MONTHLY_PRODUCTION = clone(line.production);
+  FUEL_DEFS = clone(line.fuels);
+  SKU_PROFILES = clone(line.skus);
+  DEFAULT_ASSUMPTIONS = clone(line.assumptions);
+  state.skuProfileId = line.defaultSkuId;
+  state.assumptions = clone(DEFAULT_ASSUMPTIONS);
+  state.fuelSeq = 0;
+  loadTimespan(state.span, false);
+  renderAll();
+}
+
+function renderProductLineBar(){
+  var el = document.getElementById("productLineBar");
+  if(!el) return;
+  var active = PRODUCT_LINES[state.productLine];
+  var opts = Object.keys(PRODUCT_LINES).map(function(key){
+    var l = PRODUCT_LINES[key];
+    return '<option value="'+key+'" '+(key===state.productLine?'selected':'')+'>'+escapeHtml(l.label)+'</option>';
+  }).join("");
+  var badge = active.isProxy
+    ? '<span class="audit-badge placeholder" title="Illustrative dataset showing how a second product line works — not measured plant data">Proxy / example data</span>'
+    : '<span class="audit-badge verified" title="Loaded from this plant\'s own workbook">Real plant data</span>';
+  el.innerHTML =
+    '<div class="product-line-row">' +
+      '<label class="field"><span class="lbl">Product line</span><div class="input-wrap"><select id="productLineSelect">'+opts+'</select></div></label>' +
+      badge +
+      '<span class="product-line-note'+(active.isProxy?' is-proxy':'')+'">'+
+        (active.isProxy
+          ? 'These numbers are illustrative placeholders, not measured plant data. Excel import is not available for this product line.'
+          : 'Measured data from the plant\'s "mass balance matrix" workbook.') +
+      '</span>' +
+    '</div>';
+  document.getElementById("productLineSelect").addEventListener("change", function(e){
+    switchProductLine(e.target.value);
+  });
+  var eyebrow = document.getElementById("eyebrowLine");
+  if(eyebrow) eyebrow.textContent = (active.isProxy ? "Gray OPC (proxy) · " : "White Cement · ") + "Pyroprocess GHG Console";
+  // The Excel importer's column layout is hardcoded to the White Cement workbook's fuel roster
+  // (Petcoke/Rice Husk/CKB) — importing while a different fuel roster (e.g. the OPC proxy's
+  // Coal/Petcoke) is active would silently mismap columns, so it's disabled until a matching
+  // OPC import layout exists.
+  var importBtn = document.getElementById("importBtn");
+  if(importBtn){
+    importBtn.disabled = !!active.isProxy;
+    importBtn.title = active.isProxy
+      ? "Import is wired to the White Cement workbook layout only — not yet available for this product line"
+      : "";
+  }
+}
+
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+
+function ytdProduction(){
+  var sum = {clinker:0, rawMealWet:0, elecKWh:0, waterM3:0, ckdExport:0, ckdReturned:0};
+  var caoAcc=0, mgoAcc=0, clinkerW=0, moistAcc=0, mealW=0;
+  MONTHLY_PRODUCTION.forEach(function(m){
+    sum.ckdExport += (m.ckdExport||0); sum.ckdReturned += (m.ckdReturned||0);
+    sum.clinker += m.clinker; sum.rawMealWet += m.rawMealWet;
+    sum.elecKWh += m.elecKWh; sum.waterM3 += m.waterM3;
+    caoAcc += m.caoPct*m.clinker; mgoAcc += m.mgoPct*m.clinker; clinkerW += m.clinker;
+    moistAcc += m.moisturePct*m.rawMealWet; mealW += m.rawMealWet;
+  });
+  // %CaO/%MgO are clinker assays -> clinker-weighted average; fall back to a simple average
+  // over months that have an assay when no clinker was produced yet (e.g. an all-zero YTD).
+  var simpleCao = MONTHLY_PRODUCTION.reduce(function(s,m){return s+m.caoPct;},0)/MONTHLY_PRODUCTION.length;
+  var simpleMgo = MONTHLY_PRODUCTION.reduce(function(s,m){return s+m.mgoPct;},0)/MONTHLY_PRODUCTION.length;
+  sum.caoPct = round2(clinkerW>0 ? caoAcc/clinkerW : simpleCao);
+  sum.mgoPct = round2(clinkerW>0 ? mgoAcc/clinkerW : simpleMgo);
+  sum.moisturePct = round2(mealW>0 ? moistAcc/mealW : 0.8);
+  sum.waterM3 = round2(sum.waterM3);
+  return sum;
+}
+function round2(n){ return Math.round(n*100)/100;
+}
+
+function loadTimespan(span, preserveFuelProps){
+  state.span = span;
+  var prod = (span === "YTD") ? ytdProduction() : clone(MONTHLY_PRODUCTION[span]);
+  state.production = prod;
+
+  var prevFuels = state.fuels;
+  state.fuels = FUEL_DEFS.map(function(fd, i){
+    var mass, lhv;
+    if(span === "YTD"){
+      mass = fd.mass.reduce(function(a,b){return a+b;},0);
+      var wSum=0, wTot=0;
+      fd.mass.forEach(function(m,mi){ wSum += m*fd.lhvKcal[mi]; wTot += m; });
+      lhv = round2((wTot>0 ? wSum/wTot : fd.lhvKcal.reduce(function(a,b){return a+b;},0)/12) * KCAL_TO_MJ);
+    } else {
+      mass = fd.mass[span];
+      lhv = round2(fd.lhvKcal[span] * KCAL_TO_MJ);
+    }
+    var base = { id:fd.id, name:fd.name, category:fd.category, lhv:lhv, carbonPct:fd.carbonPct, moisturePct:fd.moisturePct,
+                 biogenicPct:fd.biogenicPct, ashPct:fd.ashPct, airRatio:fd.airRatio, efUpstream:fd.efUpstream, mass:mass, isCustom:false,
+                 efSource:fd.efSource||null, efSourceValue:fd.efUpstream };
+    if(preserveFuelProps && prevFuels){
+      var prev = prevFuels.filter(function(p){return p.id===fd.id;})[0];
+      if(prev){ base.category=prev.category; base.carbonPct=prev.carbonPct; base.moisturePct=prev.moisturePct;
+                base.biogenicPct=prev.biogenicPct; base.ashPct=prev.ashPct; base.airRatio=prev.airRatio;
+                base.efUpstream=prev.efUpstream;
+                if(prev.lhvEdited) base.lhv=prev.lhv; }
+    }
+    return base;
+  });
+  if(preserveFuelProps && prevFuels){
+    prevFuels.filter(function(p){return p.isCustom;}).forEach(function(c){ state.fuels.push(clone(c)); });
+  }
+  if(!state.assumptions) state.assumptions = clone(DEFAULT_ASSUMPTIONS);
+}
+
+/* ============================================================
+   3. CALCULATION ENGINE
+   ============================================================ */
+var MW_CO2=44.009, MW_CAO=56.077, MW_MGO=40.304; // molecular weights (g/mol)
+var EF_CACO3 = 0.43971; // t CO2 / t CaCO3 — IPCC 2006 Vol.3 Table 2.1
+
+// CKD correction factor, IPCC 2006 Vol.3 Ch.2 Eq. 2.5:
+//   CFckd = 1 + (Md/Mcl) * Cd * Fd * (EFc/EFcl)
+// Md = CKD NOT recycled to the kiln (t), Mcl = clinker (t), Cd = original carbonate fraction of that CKD,
+// Fd = fraction of that carbonate already calcined, EFc = carbonate EF (CaCO3), EFcl = clinker EF uncorrected for CKD
+// (here: this plant's own assay-based Method I factor). Md = 0 (closed-loop recycling, no export, no bypass) -> CFckd = 1.000.
+// Cd defaults to the raw-mix carbonate fraction, which IPCC allows ("essentially the same as the raw mix kiln feed").
+// What the user supplies: tonnes of CKD, where it was measured (a.ckdPoint), and optionally a lab CO2 content of the dust.
+// What the console calculates (never typed in): Md, Cd, Fd, CFckd.
+//   Md = amount at dispatch / cement mill, or (captured at the dust filter) captured - returned to kiln feed
+//   Cd = original carbonate fraction, derived from the raw mix: c / EFc, where c = t CO2 released per t dry raw meal (Method I)
+//   Fd = share of that carbonate already calcined in the dust. With a dust CO2 assay w (t CO2 per t dust):
+//        w*(1 - c*Fd) = c*(1 - Fd)  ->  Fd = (c - w) / (c*(1 - w)).  No assay -> Fd = 1.0, the conservative bound.
+function computeCfckd(p, a, stoich_kg, rawMealDry_t){
+  var point = a.ckdPoint || "dispatch";
+  var amount = Math.max(0, p.ckdExport||0), returned = Math.max(0, p.ckdReturned||0);
+  var md = (point==="captured") ? Math.max(0, amount - returned) : amount;
+  var out = {cf:1, md:md, cd:0, fd:1, addon_kg:0, cdSource:"n/a", fdSource:"n/a", efcl:0, point:point, amount:amount, returned:returned};
+  if(md<=0 || !(p.clinker>0) || !(stoich_kg>0) || !(rawMealDry_t>0)) return out;
+  var efcl = stoich_kg/1000/p.clinker;
+  var c = (stoich_kg/1000)/rawMealDry_t;             // t CO2 per t dry raw meal
+  var cd = Math.min(1, c/EF_CACO3);
+  var w = Math.max(0, (a.ckdAssayCO2Pct||0))/100;
+  var fd = 1, fdSrc = "no dust assay — conservative 1.0";
+  if(w > 0 && w < 1 && c > 0){
+    fd = Math.min(1, Math.max(0, (c - w)/(c*(1 - w))));
+    fdSrc = "from dust CO₂ assay "+(w*100).toFixed(1)+"%";
+  }
+  out.cf = 1 + (md/p.clinker)*cd*fd*(EF_CACO3/efcl);
+  out.cd = cd; out.fd = fd; out.cdSource = "raw-mix derived"; out.fdSource = fdSrc; out.efcl = efcl;
+  out.addon_kg = stoich_kg*(out.cf-1);
+  return out;
+}
+
+function calc(){
+  var p = state.production, a = state.assumptions;
+  var rawMealDry_t = p.rawMealWet * (1 - p.moisturePct/100);
+  var rawMealMoisture_t = p.rawMealWet - rawMealDry_t;
+
+  // ---- Method I: clinker-based stoichiometry. %CaO/%MgO measured in the clinker (XRF),
+  // applied to clinker mass - the plant's own SKU-allocation methodology (matches its
+  // H41/H42 cells). Independent of the raw-meal/fuel/air mass balance below.
+  var calcinationCO2_stoich_kg = p.clinker*1000 * ( (p.caoPct/100)*(MW_CO2/MW_CAO) + (p.mgoPct/100)*(MW_CO2/MW_MGO) );
+  // IPCC Tier 2 is clinker EF x CFckd. CFckd is 1.000 when no CKD leaves the kiln system (see computeCfckd).
+  var ckd = computeCfckd(p, a, calcinationCO2_stoich_kg, rawMealDry_t);
+  var calcinationCO2_A_kg = calcinationCO2_stoich_kg * ckd.cf;
+
+  var fuelRows = state.fuels.map(function(f){
+    var dry_t = f.mass * (1 - f.moisturePct/100);
+    var moist_t = f.mass - dry_t;
+    // As-fired basis: carbon %, ash %, H/O/S and LHV all refer to the as-fed mass, so they apply to it directly.
+    var co2_kg = f.mass*1000 * (f.carbonPct/100) * (44/12) * a.OF;
+    var bio_kg = co2_kg * (f.biogenicPct/100);
+    var fossil_kg = co2_kg - bio_kg;
+    var energy_GJ = f.mass * f.lhv; // t * MJ/kg = GJ
+    var ash_kg = f.mass*1000 * (f.ashPct/100);
+    var air_t = f.mass * fuelAirRatio(f) * a.excessAirFactor;
+    var upstream_kg = f.mass * (f.efUpstream||0); // t as-fed * kg CO2e/t
+    return {ref:f, dry_t:dry_t, moist_t:moist_t, co2_kg:co2_kg, bio_kg:bio_kg, fossil_kg:fossil_kg,
+            energy_GJ:energy_GJ, ash_kg:ash_kg, air_t:air_t, upstream_kg:upstream_kg};
+  });
+
+  var combustionCO2_kg = fuelRows.reduce(function(s,r){return s+r.co2_kg;},0);
+  var combustionFossil_kg = fuelRows.reduce(function(s,r){return s+r.fossil_kg;},0);
+  var combustionBiogenic_kg = fuelRows.reduce(function(s,r){return s+r.bio_kg;},0);
+  var thermalEnergy_GJ = fuelRows.reduce(function(s,r){return s+r.energy_GJ;},0);
+  var fuelDryTotal_t = fuelRows.reduce(function(s,r){return s+r.dry_t;},0);
+  var fuelMoistureTotal_t = fuelRows.reduce(function(s,r){return s+r.moist_t;},0);
+  var fuelAshTotal_kg = fuelRows.reduce(function(s,r){return s+r.ash_kg;},0);
+  var combustionAir_t = fuelRows.reduce(function(s,r){return s+r.air_t;},0);
+
+  // ---- Method II: mass-balance difference. Whatever dry raw-meal mass (plus any fuel ash
+  // retained in the clinker) didn't come out as clinker or bypass dust is assumed to have
+  // left as calcination CO2. Independent of the %CaO/%MgO assay above - a genuine cross-check.
+  // Dust leaving the system: a measured CKD-export tonnage (Md), when entered, replaces the % assumption.
+  var bypassDust_kg_pre = (ckd.md>0) ? ckd.md*1000 : rawMealDry_t*1000 * (a.bypassDustPct/100);
+  var fuelAshRetained_kg = fuelAshTotal_kg * (1 - a.ashLossFraction/100);
+  var calcinationCO2_massbal_kg = Math.max(0, rawMealDry_t*1000 + fuelAshRetained_kg - p.clinker*1000 - bypassDust_kg_pre);
+
+  // Compare the mass balance against Method I *including* CFckd — both then describe all CO2 released in the kiln.
+  var calcMethodDeltaPct = calcinationCO2_A_kg>0 ? ((calcinationCO2_massbal_kg-calcinationCO2_A_kg)/calcinationCO2_A_kg)*100 : 0;
+  var calcTol = (a.calcTolPct>0) ? a.calcTolPct : 5;
+  var calcMethodStatus = "good";
+  if(Math.abs(calcMethodDeltaPct) > 2*calcTol) calcMethodStatus = "critical";
+  else if(Math.abs(calcMethodDeltaPct) > calcTol) calcMethodStatus = "warning";
+
+  var calcinationCO2_kg = (state.calcMethod==="massbal") ? calcinationCO2_massbal_kg : calcinationCO2_A_kg;
+
+  var totalFossilCO2_kg = calcinationCO2_kg + combustionFossil_kg;
+  var totalBiogenicCO2_kg = combustionBiogenic_kg;
+  var totalGrossCO2_kg = totalFossilCO2_kg + totalBiogenicCO2_kg;
+
+  var specificClinkerIntensity = p.clinker>0 ? (totalFossilCO2_kg/1000)*1000/p.clinker : 0; // kg CO2 / t clinker
+  var skuFootprint = specificClinkerIntensity * state.skuFactor;
+
+  var scope2_kg = p.elecKWh * a.gridFactor;
+  var scope2PerTClinker = p.clinker>0 ? scope2_kg/p.clinker : 0;
+
+  // ---- upstream / Scope 3 (background emission factors on fuels + raw meal) ----
+  var upstreamFuel_kg = fuelRows.reduce(function(s,r){return s+r.upstream_kg;},0);
+  // Raw meal is produced on-site (limestone crushing/grinding), not purchased upstream — its footprint is
+  // already captured via the kiln calcination formula (Scope 1) and the raw mill's electricity draw (Scope 2).
+  // Deliberately hardcoded to 0 (not driven by a.rawMealEF) so no external cradle-to-gate EF can double-count it.
+  var upstreamRawMeal_kg = 0;
+  var upstreamTotal_kg = upstreamFuel_kg + upstreamRawMeal_kg;
+  var upstreamPerTClinker = p.clinker>0 ? upstreamTotal_kg/p.clinker : 0;
+
+  var specificHeat_MJperT = p.clinker>0 ? (thermalEnergy_GJ*1000)/p.clinker : 0;
+  var tsrPct = thermalEnergy_GJ>0 ? (fuelRows.reduce(function(s,r){ return s + r.energy_GJ*(r.ref.biogenicPct/100); },0)/thermalEnergy_GJ)*100 : 0;
+
+  // ---- mass balance ----
+  var processWater_t = p.waterM3 * 1.0;
+  var totalIn_t = rawMealDry_t + rawMealMoisture_t + fuelDryTotal_t + fuelMoistureTotal_t + combustionAir_t + processWater_t;
+
+  var o2Consumed_t = (combustionCO2_kg*(32/44))/1000;
+  var unreactedAir_t = Math.max(0, combustionAir_t - o2Consumed_t);
+  var waterVapor_t = rawMealMoisture_t + fuelMoistureTotal_t + processWater_t*(a.waterEvapFraction/100);
+  var waterDischarge_t = processWater_t*(1 - a.waterEvapFraction/100);
+  var fuelAshToDust_t = (fuelAshTotal_kg/1000) * (a.ashLossFraction/100);
+  var bypassDust_t = bypassDust_kg_pre/1000;
+  var calcCO2_t = calcinationCO2_kg/1000;
+  var combCO2_t = combustionCO2_kg/1000;
+
+  var totalOut_t = p.clinker + calcCO2_t + combCO2_t + waterVapor_t + waterDischarge_t + fuelAshToDust_t + bypassDust_t + unreactedAir_t;
+  var closurePct = totalIn_t>0 ? ((totalIn_t-totalOut_t)/totalIn_t)*100 : 0;
+
+  var mbStatus = "good";
+  if(Math.abs(closurePct) > 5) mbStatus = "critical";
+  else if(Math.abs(closurePct) > 2) mbStatus = "warning";
+
+  return {
+    p:p, rawMealDry_t:rawMealDry_t, rawMealMoisture_t:rawMealMoisture_t,
+    calcinationCO2_kg:calcinationCO2_kg, fuelRows:fuelRows,
+    calcinationCO2_stoich_kg:calcinationCO2_stoich_kg, calcinationCO2_massbal_kg:calcinationCO2_massbal_kg,
+    calcinationCO2_A_kg:calcinationCO2_A_kg, ckd:ckd,
+    calcMethodDeltaPct:calcMethodDeltaPct, calcMethodStatus:calcMethodStatus, calcTol:calcTol,
+    combustionCO2_kg:combustionCO2_kg, combustionFossil_kg:combustionFossil_kg, combustionBiogenic_kg:combustionBiogenic_kg,
+    thermalEnergy_GJ:thermalEnergy_GJ, fuelDryTotal_t:fuelDryTotal_t, fuelMoistureTotal_t:fuelMoistureTotal_t,
+    fuelAshTotal_kg:fuelAshTotal_kg, combustionAir_t:combustionAir_t,
+    totalFossilCO2_kg:totalFossilCO2_kg, totalBiogenicCO2_kg:totalBiogenicCO2_kg, totalGrossCO2_kg:totalGrossCO2_kg,
+    specificClinkerIntensity:specificClinkerIntensity, skuFootprint:skuFootprint,
+    scope2_kg:scope2_kg, scope2PerTClinker:scope2PerTClinker, specificHeat_MJperT:specificHeat_MJperT, tsrPct:tsrPct,
+    upstreamFuel_kg:upstreamFuel_kg, upstreamRawMeal_kg:upstreamRawMeal_kg, upstreamTotal_kg:upstreamTotal_kg, upstreamPerTClinker:upstreamPerTClinker,
+    totalIn_t:totalIn_t, totalOut_t:totalOut_t, closurePct:closurePct, mbStatus:mbStatus,
+    processWater_t:processWater_t, unreactedAir_t:unreactedAir_t, waterVapor_t:waterVapor_t,
+    waterDischarge_t:waterDischarge_t, fuelAshToDust_t:fuelAshToDust_t, bypassDust_t:bypassDust_t
+  };
+}
+
+// compute a lightweight result (fossil/biogenic/calcination split only) for an arbitrary month, for the trend chart
+function calcMonthLite(mIdx){
+  var p = MONTHLY_PRODUCTION[mIdx], a = state.assumptions;
+  var calcinationCO2_stoich_kg = p.clinker*1000 * ( (p.caoPct/100)*(MW_CO2/MW_CAO) + (p.mgoPct/100)*(MW_CO2/MW_MGO) );
+  var rawMealDry_tm = p.rawMealWet * (1 - p.moisturePct/100);
+  var ckdm = computeCfckd(p, a, calcinationCO2_stoich_kg, rawMealDry_tm);
+  var fossil_kg=0, bio_kg=0, ashTotal_kg=0;
+  FUEL_DEFS.forEach(function(fd){
+    var live = state.fuels.filter(function(f){return f.id===fd.id;})[0] || fd;
+    var mass = fd.mass[mIdx];
+    var co2_kg = mass*1000*(live.carbonPct/100)*(44/12)*a.OF; // as-fired basis
+    var b = co2_kg*(live.biogenicPct/100);
+    bio_kg += b; fossil_kg += (co2_kg-b);
+    ashTotal_kg += mass*1000*(live.ashPct/100);
+  });
+  var calcinationCO2_kg = calcinationCO2_stoich_kg * ckdm.cf;
+  if(state.calcMethod==="massbal"){
+    var rawMealDry_t = rawMealDry_tm;
+    var bypassDust_kg = (ckdm.md>0) ? ckdm.md*1000 : rawMealDry_t*1000 * (a.bypassDustPct/100);
+    var ashRetained_kg = ashTotal_kg * (1 - a.ashLossFraction/100);
+    calcinationCO2_kg = Math.max(0, rawMealDry_t*1000 + ashRetained_kg - p.clinker*1000 - bypassDust_kg);
+  }
+  var perT = p.clinker>0 ? 1000/p.clinker : 0;
+  return {
+    calc: calcinationCO2_kg*perT/1000,
+    fossil: fossil_kg*perT/1000,
+    bio: bio_kg*perT/1000
+  };
+}
+
+/* ============================================================
+   4. FORMATTING HELPERS
+   ============================================================ */
+function fmt(n, d){ if(n===undefined||n===null||isNaN(n)) return "–"; d = (d===undefined?1:d);
+  return Number(n).toLocaleString(undefined,{minimumFractionDigits:d,maximumFractionDigits:d}); }
+function fmt0(n){ return fmt(n,0); }
+function pct(n,d){ return fmt(n, d===undefined?1:d)+"%"; }
+
+/* ============================================================
+   5. RENDER: static field builders
+   ============================================================ */
+function field(labelHtml, unit, key, step, min, onChange, val){
+  var id = "f_"+key.replace(/[^a-z0-9]/gi,'_');
+  return '<label class="field"><span class="lbl">'+labelHtml+'</span>'+
+    '<div class="input-wrap"><input type="number" id="'+id+'" step="'+step+'" min="'+(min===undefined?0:min)+'" value="'+val+'" data-key="'+key+'">'+
+    '<span class="input-unit">'+unit+'</span></div></label>';
+}
+
+function renderTimespanTabs(){
+  var el = document.getElementById("timespanTabs");
+  var html = MONTHS.map(function(m,i){
+    return '<button data-span="'+i+'" class="'+(state.span===i?'active':'')+'">'+m+'</button>';
+  }).join("");
+  html += '<button data-span="YTD" class="ytd '+(state.span==="YTD"?'active':'')+'">YTD Total</button>';
+  el.innerHTML = html;
+  el.querySelectorAll("button").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var v = btn.getAttribute("data-span");
+      loadTimespan(v==="YTD"?"YTD":parseInt(v,10), true);
+      renderAll();
+    });
+  });
+}
+
+function renderProductionFields(){
+  var p = state.production;
+  var html =
+    field("Clinker production","t","clinker",1,0,null,p.clinker) +
+    field("Raw meal feed (wet, as-fed)","t","rawMealWet",1,0,null,p.rawMealWet) +
+    field("Inbound moisture","%","moisturePct",0.1,0,null,p.moisturePct) +
+    field("CaO in clinker (XRF assay)","%","caoPct",0.01,0,null,p.caoPct) +
+    field("MgO in clinker (XRF assay)","%","mgoPct",0.01,0,null,p.mgoPct);
+  document.getElementById("productionFields").innerHTML = html;
+  wireInputs(document.getElementById("productionFields"), function(key,v){ state.production[key]=v; renderAll(); });
+}
+
+// Fuel library: proxy (default) values applied when a fuel is picked from the "Add from fuel library" list.
+// Strict Audit Mode: every value here is a *proxy* — shown in amber and flagged until the plant types in its own
+// figure. The tooltip on each flag names where the proxy LHV came from:
+//   IPCC   = IPCC 2006 Vol. 2 Ch. 1 Table 1.4 (NCV, and carbon = kg C/GJ x NCV / 10; moisture left at 0 because
+//            the IPCC NCV is on an as-received basis);
+//   GCCA   = GCCA Cement CO2 & Energy Protocol V4.2, Appendix 5 (tyres: 85 kg CO2/GJ, 28.2 GJ/t, 27 % biomass);
+//   PLANT  = the White Cement plant's own console record, shown only as a starting point for a different plant;
+//   TYPICAL= typical literature range for this fuel class — NOT a cited default; confirm with a plant assay.
+// Basis: every library value is AS-FIRED (as-received), like the fuel table. IPCC NCVs and GCCA tyre values are
+// as-received already (moisture 0 / 1 %); the TYPICAL biomass and RDF figures were dry-basis literature values and
+// have been converted once with X_ar = X_dry x (1 - M) at the stated moisture (their LHVs were already as-received).
+// Upstream (Scope 3) EF is pre-filled only where the plant supplied a SimaPro result (HFO, petcoke); every other
+// fuel stays at 0 / "Unverified" so nothing is estimated on the user's behalf.
+var SRC_IPCC = "IPCC 2006 Vol. 2 Table 1.4 default", SRC_TYP = "typical literature value, not a cited default";
+var FUEL_LIBRARY = [
+  // ---- Conventional fossil ----
+  { key:"hardcoal", group:"Conventional fossil", name:"Hard coal (bituminous)", category:"fossil", lhv:25.8, carbonPct:66.6, moisturePct:0, ashPct:14, biogenicPct:0, comp:{H:4.0,O:6.0,S:1.0},
+    efUpstream:0, lhvSource:SRC_IPCC+" (other bituminous coal); ash is typical" },
+  { key:"lignite", group:"Conventional fossil", name:"Lignite", category:"fossil", lhv:11.9, carbonPct:32.8, moisturePct:0, ashPct:8, biogenicPct:0, comp:{H:2.5,O:12.0,S:0.5},
+    efUpstream:0, lhvSource:SRC_IPCC+"; ash is typical" },
+  { key:"petcoke", group:"Conventional fossil", name:"Petcoke", category:"fossil", lhv:32.5, carbonPct:86.5, moisturePct:0, ashPct:0.5, biogenicPct:0, comp:{H:3.5,O:1.0,S:4.5},
+    efUpstream:600, efSource:"SimaPro export (petcoke ef trial.pdf)", lhvSource:SRC_IPCC+"; ash is typical" },
+  { key:"hfo", group:"Conventional fossil", name:"Heavy fuel oil", category:"fossil", lhv:40.4, carbonPct:85.2, moisturePct:0, ashPct:0.05, biogenicPct:0, comp:{H:10.5,O:0.0,S:2.5},
+    efUpstream:679, efSource:"SimaPro: Heavy fuel oil {RoW} | market for heavy fuel oil | Cut-off, S", lhvSource:SRC_IPCC+" (residual fuel oil)" },
+  { key:"natgas", group:"Conventional fossil", name:"Natural gas (enter mass in t)", category:"fossil", lhv:48.0, carbonPct:73.4, moisturePct:0, ashPct:0, biogenicPct:0, comp:{H:24.0,O:0.0,S:0.0},
+    efUpstream:0, lhvSource:SRC_IPCC+"; the console takes tonnes, so convert Nm\u00b3 to t first" },
+  { key:"diesel", group:"Conventional fossil", name:"Diesel / light fuel oil", category:"fossil", lhv:43.0, carbonPct:86.9, moisturePct:0, ashPct:0, biogenicPct:0, comp:{H:13.1,O:0.0,S:0.0},
+    efUpstream:0, lhvSource:SRC_IPCC+" (gas/diesel oil)" },
+  // ---- Alternative, mixed fossil + biogenic ----
+  { key:"tyres", group:"Alternative fuels, mixed origin", name:"Waste tyres", category:"mixed", lhv:28.2, carbonPct:65.4, moisturePct:1, ashPct:12, biogenicPct:27, comp:{H:6.0,O:5.0,S:1.5},
+    efUpstream:0, lhvSource:"GCCA Protocol V4.2 Appendix 5 (28.2 GJ/t, 85 kg CO\u2082/GJ, 27% biomass); ash is typical" },
+  { key:"rdf", group:"Alternative fuels, mixed origin", name:"RDF / SRF", category:"mixed", lhv:18, carbonPct:40.5, moisturePct:10, ashPct:9, biogenicPct:50, comp:{H:5.4,O:27,S:0.27},
+    efUpstream:0, lhvSource:SRC_TYP+"; RDF varies widely, so measure LHV and biogenic share" },
+  // ---- Alternative, biogenic ----
+  { key:"ricehusk", group:"Alternative fuels, biogenic", name:"Rice husk", category:"biogenic", lhv:14.7, carbonPct:39, moisturePct:0, ashPct:0, biogenicPct:100, comp:{H:5.0,O:35.0,S:0.05},
+    efUpstream:0, lhvSource:"values from the White Cement plant's own console record, as a starting point only" },
+  { key:"wood", group:"Alternative fuels, biogenic", name:"Wood chips / sawdust", category:"biogenic", lhv:15, carbonPct:40, moisturePct:20, ashPct:0.8, biogenicPct:100, comp:{H:4.8,O:34.4,S:0},
+    efUpstream:0, lhvSource:SRC_TYP },
+  { key:"pks", group:"Alternative fuels, biogenic", name:"Palm kernel shell", category:"biogenic", lhv:17, carbonPct:45, moisturePct:10, ashPct:2.7, biogenicPct:100, comp:{H:5.4,O:36,S:0.09},
+    efUpstream:0, lhvSource:SRC_TYP },
+  { key:"bagasse", group:"Alternative fuels, biogenic", name:"Bagasse (dried)", category:"biogenic", lhv:14.5, carbonPct:39.95, moisturePct:15, ashPct:2.55, biogenicPct:100, comp:{H:5.1,O:37.4,S:0},
+    efUpstream:0, lhvSource:SRC_TYP },
+  { key:"sludge", group:"Alternative fuels, biogenic", name:"Dried sewage sludge", category:"biogenic", lhv:11, carbonPct:27, moisturePct:10, ashPct:31.5, biogenicPct:100, comp:{H:4.05,O:18,S:0.72},
+    efUpstream:0, lhvSource:SRC_TYP+"; ash and LHV vary strongly with the treatment process" }
+];
+var PROXY_FIELDS = { lhv:"LHV", carbonPct:"carbon %", ashPct:"ash %", moisturePct:"moisture", biogenicPct:"biogenic share", H:"H %", O:"O %", S:"S %" };
+
+// Theoretical (stoichiometric) air per kg of AS-FIRED fuel, from the as-fired ultimate analysis (mass fractions of the
+// fuel as fed, moisture included in the 100 %):
+//   air = 11.51*C + 34.34*(H - O/8) + 4.31*S        (kg air / kg as-fired fuel)
+// Fuels that carry a saved composition (library fuels, and blank fuels once H, O and S are entered) get a
+// *calculated* air ratio. The plant's three original fuels have no composition on file, so they keep the plant's own constant.
+function compComplete(f){ return !!f.comp && f.comp.H!=null && f.comp.O!=null && f.comp.S!=null; }
+function fuelAirRatio(f){
+  if(!f.comp) return f.airRatio || 0;
+  if(!compComplete(f)) return 0;
+  var C=f.carbonPct/100, H=f.comp.H/100, O=f.comp.O/100, S=f.comp.S/100;
+  return Math.max(0, 11.51*C + 34.34*(H - O/8) + 4.31*S);
+}
+
+function addFuelFromLibrary(key){
+  var lib = FUEL_LIBRARY.filter(function(x){return x.key===key;})[0];
+  if(!lib) return;
+  state.fuelSeq++;
+  var f = { id:"custom_"+state.fuelSeq, name:lib.name, category:lib.category, lhv:lib.lhv, carbonPct:lib.carbonPct,
+    moisturePct:lib.moisturePct, biogenicPct:lib.biogenicPct, ashPct:lib.ashPct, comp:clone(lib.comp), airRatio:0,
+    efUpstream:lib.efUpstream, efSource:lib.efSource||null, efSourceValue:(lib.efSource?lib.efUpstream:undefined), mass:0, isCustom:true,
+    lhvSource:lib.lhvSource, proxy:{ lhv:true, carbonPct:true, ashPct:true, moisturePct:true, H:true, O:true, S:true } };
+  f.airRatio = fuelAirRatio(f);
+  if(lib.category==="mixed") f.proxy.biogenicPct = true;
+  state.fuels.push(f);
+  renderAll();
+}
+
+function renderFuelLibrarySelect(){
+  var sel = document.getElementById("fuelLibrarySel");
+  if(!sel) return;
+  var html = '<option value="">+ Add from fuel library\u2026</option>', groups = [];
+  FUEL_LIBRARY.forEach(function(x){ if(groups.indexOf(x.group)<0) groups.push(x.group); });
+  groups.forEach(function(g){
+    html += '<optgroup label="'+escapeHtml(g)+'">' + FUEL_LIBRARY.filter(function(x){return x.group===g;})
+      .map(function(x){ return '<option value="'+x.key+'">'+escapeHtml(x.name)+'</option>'; }).join("") + '</optgroup>';
+  });
+  sel.innerHTML = html;
+}
+
+var FUEL_CATEGORIES = [
+  { id:"fossil", label:"Fossil" },
+  { id:"biogenic", label:"Biogenic" },
+  { id:"mixed", label:"Mixed" }
+];
+
+function fuelTypeSelectHtml(f){
+  var opts = FUEL_CATEGORIES.map(function(c){
+    return '<option value="'+c.id+'" '+(f.category===c.id?'selected':'')+'>'+c.label+'</option>';
+  }).join("");
+  return '<select class="cat-'+f.category+'" data-fkey="category">'+opts+'</select>';
+}
+
+function renderFuelTable(){
+  var tbody = document.getElementById("fuelTbody");
+  tbody.innerHTML = state.fuels.map(function(f, idx){
+    var bioLocked = f.category !== "mixed";
+    var px = f.proxy || {};
+    var pxLeft = Object.keys(px).filter(function(k){return px[k];});
+    var pc = function(k){ return px[k] ? ' class="proxy-val" title="Proxy from the fuel library'+(k==="lhv"&&f.lhvSource?' ('+escapeHtml(f.lhvSource)+')':'')+' — replace with the plant figure if available"' : ''; };
+    var compCell = function(k){
+      if(!f.comp) return '<td class="na-cell" title="No composition on file for this fuel — its air ratio is the plant\'s own constant">–</td>';
+      var v = f.comp[k];
+      var need = (v==null);
+      var cls = (need || px[k]) ? ' class="proxy-val"' : '';
+      var tip = need ? ' title="Required: enter the as-fired '+k+' % to calculate the air ratio"'
+                     : (px[k] ? ' title="Proxy composition from the fuel library — replace with the plant analysis if available"' : '');
+      return '<td><input type="number" step="0.1" min="0" max="100" data-fkey="comp_'+k+'"'+cls+tip+' value="'+(need?'':v)+'" placeholder="'+(need?'enter':'')+'"></td>';
+    };
+    var airCell;
+    if(f.comp){
+      var ar = fuelAirRatio(f), done = compComplete(f);
+      var sum = (f.carbonPct||0)+(done?f.comp.H+f.comp.O+f.comp.S:0)+(f.ashPct||0)+(f.moisturePct||0);
+      var bad = done && sum > 100.5;
+      airCell = '<td><input type="text" readonly tabindex="-1" class="calc-val'+(bad?' proxy-val':'')+'" data-fkey="airRatio" value="'+(done?fmt(ar,2):'')+'" placeholder="needs H, O, S" title="'+
+        (bad ? 'C + H + O + S + ash + moisture adds up to '+fmt(sum,1)+'% of the as-fired fuel — check the composition. ' : '')+
+        'Calculated: 11.51·C + 34.34·(H − O/8) + 4.31·S (mass fractions, as-fired fuel), kg air per kg fuel as fed"></td>';
+    } else {
+      airCell = '<td><input type="number" step="0.1" min="0" data-fkey="airRatio" title="Plant constant — no composition on file for this fuel" value="'+f.airRatio+'"></td>';
+    }
+    return '<tr data-idx="'+idx+'">'+
+      '<td class="name-cell"><input type="text" data-fkey="name" value="'+f.name+'"></td>'+
+      '<td>'+fuelTypeSelectHtml(f)+'</td>'+
+      '<td><input type="number" step="1" min="0" data-fkey="mass" value="'+f.mass+'"></td>'+
+      '<td><input type="number" step="0.1" min="0" max="100" data-fkey="moisturePct"'+pc("moisturePct")+' value="'+f.moisturePct+'"></td>'+
+      '<td><input type="number" step="0.1" min="0" data-fkey="lhv"'+pc("lhv")+' value="'+f.lhv+'"></td>'+
+      '<td><input type="number" step="0.1" min="0" max="100" data-fkey="carbonPct"'+pc("carbonPct")+' value="'+f.carbonPct+'"></td>'+
+      compCell('H')+compCell('O')+compCell('S')+
+      '<td><input type="number" step="0.1" min="0" max="100" data-fkey="ashPct"'+pc("ashPct")+' value="'+f.ashPct+'"></td>'+
+      '<td><input type="number" step="1" min="0" max="100" data-fkey="biogenicPct"'+pc("biogenicPct")+' value="'+f.biogenicPct+'" '+(bioLocked?'disabled title="Set Type to Mixed to enter a custom biogenic share"':'')+'></td>'+
+      airCell+
+      '<td><button class="row-del" data-del="'+idx+'" title="Remove fuel">✕</button></td>'+
+    '</tr>';
+  }).join("");
+
+  tbody.querySelectorAll("select[data-fkey='category']").forEach(function(sel){
+    sel.addEventListener("change", function(){
+      var idx = parseInt(sel.closest("tr").getAttribute("data-idx"),10);
+      var f = state.fuels[idx];
+      f.category = sel.value;
+      if(f.category==="fossil") f.biogenicPct = 0;
+      else if(f.category==="biogenic") f.biogenicPct = 100;
+      else if(f.category==="mixed" && (f.biogenicPct<=0 || f.biogenicPct>=100)) f.biogenicPct = 50;
+      renderAll();
+    });
+  });
+  tbody.querySelectorAll("input").forEach(function(inp){
+    inp.addEventListener("input", function(){
+      var idx = parseInt(inp.closest("tr").getAttribute("data-idx"),10);
+      var key = inp.getAttribute("data-fkey");
+      var f = state.fuels[idx];
+      if(key==="name"){ f.name = inp.value; renderCharts(); return; }
+      if(key.indexOf("comp_")===0){
+        var ck = key.slice(5), cv = parseFloat(inp.value);
+        f.comp[ck] = isNaN(cv) ? null : cv;
+        if(f.proxy) f.proxy[ck] = false;
+        f.airRatio = fuelAirRatio(f);
+        renderAll(); return;
+      }
+      var v = parseFloat(inp.value); if(isNaN(v)) v=0;
+      f[key] = v;
+      if(key==="lhv") f.lhvEdited = true;
+      if(key==="carbonPct" && f.comp) f.airRatio = fuelAirRatio(f);
+      if(f.proxy && f.proxy[key]){
+        f.proxy[key] = false;
+        inp.classList.remove("proxy-val"); inp.removeAttribute("title");
+      }
+      renderAll();
+    });
+  });
+  tbody.querySelectorAll("[data-del]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var idx = parseInt(btn.getAttribute("data-del"),10);
+      state.fuels.splice(idx,1);
+      renderAll();
+    });
+  });
+}
+
+// Strict Audit Mode: classify an upstream/background EF as verified (matches a logged source),
+// custom (non-zero but no logged source — e.g. hand-edited), or unverified (still at the 0 default).
+// Nothing here is ever auto-filled with a guessed industry average.
+function efBadge(val, source, sourceVal){
+  val = val || 0;
+  if(source && typeof sourceVal === "number" && Math.abs(val - sourceVal) < 1e-6){
+    return '<span class="audit-badge verified" title="Matches the recorded source: '+escapeHtml(source)+'">'+escapeHtml(source)+'</span>';
+  }
+  if(val > 0){
+    return '<span class="audit-badge placeholder" title="Non-zero but no logged data source on file — confirm where this figure came from">Custom — confirm source</span>';
+  }
+  return '<span class="audit-badge placeholder" title="Strict Audit Mode: no verified factor on file for this material — held at 0, never estimated">Unverified — add factor</span>';
+}
+
+function renderUpstreamEfTable(){
+  var CLS = {fossil:"Fossil fuel", biogenic:"Biogenic fuel", mixed:"Mixed fuel"};
+  var rows = state.fuels.map(function(f, idx){
+    var lcaNote = f.id==="ricehusk"
+      ? '<span class="mat-tag" title="LCA literature note: rice husk is an agricultural residue/waste with no dedicated cultivation or processing burden — biomass-fuel LCA convention treats its upstream EF as effectively 0 kg CO₂e/t on that basis, distinct from a plain data gap. Still shown as Unverified pending a formal source citation.">ⓘ LCA note</span>'
+      : '';
+    var cell, provided = isProvided(f.efUpstream, f.efSource, f.efSourceValue, f.id);
+    if(provided){
+      cell = '<div class="ef-input-wrap"><span class="provided"><span class="pv num">'+fmt(f.efUpstream,2)+'</span><button class="link-btn" data-override="'+f.id+'">Override</button></span></div>';
+    } else {
+      var matches = f.efSource && typeof f.efSourceValue==="number" && Math.abs((f.efUpstream||0)-f.efSourceValue)<1e-6;
+      cell = '<div class="ef-input-wrap"><input type="number" step="0.001" min="0" data-fkey="efUpstream" class="'+(matches?'':'ef-warn')+'" value="'+(f.efUpstream||0)+'">'+
+        restoreBtn(f.id, f.efSource, f.efSourceValue).replace('class="restore-row"','class="restore-row" style="margin-top:0"')+'</div>';
+    }
+    return '<tr data-idx="'+idx+'"><td class="name-cell">'+escapeHtml(f.name)+(lcaNote?'<div class="mat-sub">'+lcaNote+'</div>':'')+'</td>'+
+      '<td class="cls-cell"><span class="fuel-tag '+(f.category==="biogenic"?"bio":f.category)+'">'+(CLS[f.category]||"Fuel")+'</span></td>'+
+      '<td class="ef-cell">'+cell+'</td>'+
+      '<td class="src-cell">'+efBadge(f.efUpstream, f.efSource, f.efSourceValue)+'</td></tr>';
+  }).join("");
+  var tbody = document.getElementById("upstreamEfTbody");
+  tbody.innerHTML = rows;
+  tbody.querySelectorAll("[data-override]").forEach(function(b){ b.addEventListener("click", function(){
+    state.efOverride[b.getAttribute("data-override")] = true; renderAll();
+    var tr = document.querySelector('#upstreamEfTbody tr[data-idx="'+state.fuels.findIndex(function(f){return f.id===b.getAttribute("data-override");})+'"] input'); if(tr) tr.focus();
+  }); });
+  tbody.querySelectorAll("[data-restore]").forEach(function(b){ b.addEventListener("click", function(){
+    var f = state.fuels.filter(function(x){return x.id===b.getAttribute("data-restore");})[0];
+    if(f){ f.efUpstream = f.efSourceValue; state.efOverride[f.id] = false; renderAll(); }
+  }); });
+  tbody.querySelectorAll("input[data-fkey='efUpstream']").forEach(function(inp){
+    inp.addEventListener("input", function(){
+      var idx = parseInt(inp.closest("tr").getAttribute("data-idx"),10);
+      var v = parseFloat(inp.value); if(isNaN(v)) v=0;
+      state.fuels[idx].efUpstream = v;
+      renderAll();
+    });
+  });
+}
+
+function renderCombustionFields(){
+  var a = state.assumptions;
+  var html =
+    field("Oxidation factor (OF)","frac","OF",0.001,0,null,a.OF) +
+    field("Excess air factor","× stoich","excessAirFactor",0.01,1,null,a.excessAirFactor);
+  document.getElementById("combustionFields").innerHTML = html;
+  wireInputs(document.getElementById("combustionFields"), function(key,v){ state.assumptions[key]=v; renderAll(); });
+}
+
+function renderAuxFields(){
+  var p = state.production;
+  var html =
+    field("Electricity (burning + quench)","kWh","elecKWh",100,0,null,p.elecKWh) +
+    field("Process water (quench / cooling)","m³","waterM3",1,0,null,p.waterM3);
+  document.getElementById("auxFields").innerHTML = html;
+  wireInputs(document.getElementById("auxFields"), function(key,v){
+    state.production[key]=v;
+    renderAll();
+  });
+}
+
+function isProvided(val, source, sourceVal, key){
+  var ov = state.efOverride && state.efOverride[key];
+  return !!source && typeof sourceVal==="number" && Math.abs((val||0) - sourceVal) < 1e-6 && !ov;
+}
+function restoreBtn(key, source, sourceVal){
+  return (source && typeof sourceVal==="number") ? '<div class="restore-row"><button class="link-btn" data-restore="'+key+'">Restore provided value</button></div>' : '';
+}
+
+function renderBackgroundPanel(){
+  var a = state.assumptions;
+  if(!state.efOverride) state.efOverride = {};
+  var gridEl = document.getElementById("gridEfField");
+  var gridBadge = efBadge(a.gridFactor, a.gridFactorSource, a.gridFactorSourceValue);
+  if(isProvided(a.gridFactor, a.gridFactorSource, a.gridFactorSourceValue, "grid")){
+    gridEl.innerHTML =
+      '<div class="field provided-field"><span class="lbl" style="font-size:11.5px;color:var(--ink-700);font-weight:500;">Grid electricity EF <b style="color:var(--ink-400);font-weight:500;">· provided</b></span>'+
+      '<div><span class="provided"><span class="pv num">'+fmt(a.gridFactor,5)+'</span><span class="pu">kg CO₂/kWh</span>'+gridBadge+
+      '<button class="link-btn" data-override="grid">Override</button></span></div></div>';
+  } else {
+    gridEl.innerHTML =
+      '<label class="field"><span class="lbl">Grid electricity EF'+gridBadge+'</span>'+
+      '<div class="input-wrap"><input type="number" id="f_gridFactor" step="0.0001" min="0" value="'+a.gridFactor+'" data-key="gridFactor">'+
+      '<span class="input-unit">kgCO₂/kWh</span></div>'+restoreBtn("grid", a.gridFactorSource, a.gridFactorSourceValue)+'</label>';
+    wireInputs(gridEl, function(key,v){ state.assumptions[key]=v; renderAll(); });
+  }
+  gridEl.querySelectorAll("[data-override]").forEach(function(b){ b.addEventListener("click", function(e){ e.preventDefault(); state.efOverride.grid = true; renderAll(); var i=document.getElementById("f_gridFactor"); if(i) i.focus(); }); });
+  gridEl.querySelectorAll("[data-restore]").forEach(function(b){ b.addEventListener("click", function(e){ e.preventDefault(); state.assumptions.gridFactor = a.gridFactorSourceValue; state.efOverride.grid = false; renderAll(); }); });
+  renderUpstreamEfTable();
+}
+
+function renderMbFields(){
+  var a = state.assumptions;
+  function aField(label, unit, key, step, val){
+    return '<label class="field"><span class="lbl">'+label+'</span><div class="input-wrap"><input type="number" id="f_'+key+'" step="'+step+'" min="0" value="'+val+'" data-key="'+key+'">'+
+      '<span class="input-unit">'+unit+'</span></div></label>';
+  }
+  var html =
+    aField("Bypass dust loss (raw meal)","%","bypassDustPct",0.1,a.bypassDustPct) +
+    aField("Fuel ash lost to dust/bypass","%","ashLossFraction",1,a.ashLossFraction) +
+    aField("Quench-water evaporation","%","waterEvapFraction",1,a.waterEvapFraction) +
+    aField("I/II convergence tolerance (±)","%","calcTolPct",0.5,(a.calcTolPct>0?a.calcTolPct:5));
+  document.getElementById("mbFields").innerHTML = html;
+  wireInputs(document.getElementById("mbFields"), function(key,v){ state.assumptions[key]=v; renderAll(); });
+}
+
+var CKD_POINTS = [
+  { id:"dispatch",   label:"Weighed out at dispatch — sold or taken off-site",
+    hint:"Weigh it at the weighbridge when it leaves. Count only dust that left the kiln system (sold, taken off-site, landfilled) — not dust that went back into the kiln feed." },
+  { id:"cementmill", label:"Fed into the cement mill as a cement constituent",
+    hint:"Dust sent to the cement mill leaves the kiln system even though it stays in the product. Weigh it at the cement-mill feed." },
+  { id:"captured",   label:"Captured at the dust filter (total collected)",
+    hint:"The total caught by the kiln dust filter (ESP or bag filter). Also enter how much of it was returned to the kiln feed — the console takes the difference as the dust that left." }
+];
+
+function renderCkdFields(){
+  var p = state.production, a = state.assumptions;
+  var unit = state.ckdUnit || "t", k = (unit==="kg") ? 1000 : 1;
+  function shown(t){ return Math.round((t||0)*k*1000)/1000; }
+  var point = a.ckdPoint || "dispatch";
+  var pointDef = CKD_POINTS.filter(function(c){ return c.id===point; })[0] || CKD_POINTS[0];
+  function numField(label, key, val, unitLbl, step){
+    return '<label class="field"><span class="lbl">'+label+'</span><div class="input-wrap">'+
+      '<input type="number" id="f_'+key+'" step="'+step+'" min="0" value="'+val+'" data-key="'+key+'">'+
+      '<span class="input-unit">'+unitLbl+'</span></div></label>';
+  }
+  var html =
+    numField("Amount of CKD — this period","ckdExport",shown(p.ckdExport),unit,"any") +
+    '<label class="field"><span class="lbl">Unit</span><div class="input-wrap"><select id="ckdUnitSel"><option value="t"'+(unit==="t"?' selected':'')+'>tonnes (t)</option><option value="kg"'+(unit==="kg"?' selected':'')+'>kilograms (kg)</option></select></div></label>' +
+    '<label class="field" style="grid-column:1 / -1;"><span class="lbl">Where was it measured?</span><div class="input-wrap"><select id="ckdPointSel">'+
+      CKD_POINTS.map(function(c){ return '<option value="'+c.id+'"'+(c.id===point?' selected':'')+'>'+c.label+'</option>'; }).join("")+
+    '</select></div></label>' +
+    (point==="captured" ? numField("…of which returned to the kiln feed","ckdReturned",shown(p.ckdReturned),unit,"any") : "") +
+    numField("Dust CO₂ content — lab assay <b>· optional</b>","ckdAssayCO2Pct",a.ckdAssayCO2Pct||0,"%","0.1");
+  var el = document.getElementById("ckdFields");
+  el.innerHTML = html;
+  wireInputs(el, function(key,v){
+    if(key==="ckdExport" || key==="ckdReturned") state.production[key] = v/k;
+    else state.assumptions[key] = v;
+    renderAll();
+  });
+  document.getElementById("ckdUnitSel").addEventListener("change", function(e){ state.ckdUnit = e.target.value; renderAll(); });
+  document.getElementById("ckdPointSel").addEventListener("change", function(e){ state.assumptions.ckdPoint = e.target.value; renderAll(); });
+  document.getElementById("ckdPointSel").title = pointDef.hint;
+  document.getElementById("ckdEnterHint").innerHTML = escapeHtml(pointDef.hint) +
+    ' <b>Dust CO₂ content</b> is the CO₂ still locked in the dust as uncalcined carbonate (lab CO₂ analysis, or loss on ignition corrected for moisture). Without it the console assumes the dust\'s carbonate is fully calcined, which gives the highest, most conservative correction.';
+}
+
+function ckdBadgeHtml(r){
+  var a = state.assumptions;
+  if(r.ckd.md > 0){
+    if(a.ckdAssayCO2Pct > 0) return '<span class="audit-badge verified" title="CKD tonnage entered and Fd derived from the dust CO₂ assay; Cd comes from the raw mix (IPCC-permitted).">CKD export — Fd from dust assay</span>';
+    return '<span class="audit-badge placeholder" title="CKD tonnage entered but no dust CO₂ assay on file, so Fd is held at the conservative 1.0. Add the assay to derive it.">CKD export — no dust assay (Fd = 1.0)</span>';
+  }
+  if(a.ckdBasisVerified) return '<span class="audit-badge verified" title="'+escapeHtml(a.ckdBasis||"")+'">Verified — operator-confirmed closed loop</span>';
+  return '<span class="audit-badge unverified" title="No evidence on file that CKD is fully recycled. IPCC default CFckd = 1.02 applies until it is shown.">Unverified — no CKD basis on file</span>';
+}
+
+function renderCkdReadout(r){
+  var k = r.ckd, p = r.p;
+  var before = p.clinker>0 ? r.calcinationCO2_stoich_kg/p.clinker : 0;
+  var after = p.clinker>0 ? r.calcinationCO2_A_kg/p.clinker : 0;
+  document.getElementById("ckdBasisLine").innerHTML =
+    '<span class="subhead" style="margin-bottom:6px;">Basis</span>' + ckdBadgeHtml(r) +
+    '<div class="footnote" style="margin-top:6px;">'+
+      (k.md>0
+        ? 'CKD leaving the kiln system is entered for this period, so the plant\'s closed-loop basis' + (state.assumptions.ckdBasis ? ' (' + escapeHtml(state.assumptions.ckdBasis) + ')' : '') + ' does not apply to it — clear the amount to return to the closed-loop case.'
+        : (state.assumptions.ckdBasis ? escapeHtml(state.assumptions.ckdBasis) : 'No handling basis recorded for this product line.')) +'</div>';
+  var mdNote = (k.point==="captured") ? ' <span style="color:var(--ink-400);">(captured '+fmt(k.amount,1)+' − returned '+fmt(k.returned,1)+')</span>' : '';
+  var html =
+    '<div class="mb-line"><span>CKD not recycled to the kiln (Md)'+mdNote+'</span><span class="v num">'+fmt(k.md,1)+' t</span></div>' +
+    '<div class="mb-line"><span>Md / Mcl (CKD out ÷ clinker)</span><span class="v num">'+(p.clinker>0 ? fmt(k.md/p.clinker,4) : "–")+'</span></div>' +
+    '<div class="mb-line"><span>Carbonate fraction of the dust (Cd) <span style="color:var(--ink-400);">· from the raw mix</span></span><span class="v num">'+(k.md>0 ? fmt(k.cd,3) : "–")+'</span></div>' +
+    '<div class="mb-line"><span>Calcined share of that carbonate (Fd) <span style="color:var(--ink-400);">'+(k.md>0 ? '· '+escapeHtml(k.fdSource) : '')+'</span></span><span class="v num">'+(k.md>0 ? fmt(k.fd,3) : "–")+'</span></div>' +
+    '<div class="mb-line"><span>Method I before CFckd</span><span class="v num">'+fmt0(before)+' kg CO₂/t clinker</span></div>' +
+    '<div class="mb-line"><span>Method I after CFckd</span><span class="v num">'+fmt0(after)+' kg CO₂/t clinker</span></div>' +
+    '<div class="mb-total"><span>CFckd <span style="font-weight:400;color:var(--ink-400);">· IPCC Eq. 2.5</span></span><span class="num">'+fmt(k.cf,3)+'</span></div>';
+  document.getElementById("ckdReadout").innerHTML = html;
+}
+
+function renderSkuFields(){
+  var html =
+    '<label class="field"><span class="lbl">SKU profile</span><div class="input-wrap"><select id="skuSelect">'+
+    SKU_PROFILES.map(function(s){ return '<option value="'+s.id+'" '+(s.id===state.skuProfileId?'selected':'')+'>'+s.name+'</option>'; }).join("")+
+    '</select></div></label>'+
+    field("Clinker-to-cement factor","ratio","skuFactor",0.01,0,null,state.skuFactor);
+  document.getElementById("skuFields").innerHTML = html;
+  document.getElementById("skuSelect").addEventListener("change", function(e){
+    state.skuProfileId = e.target.value;
+    var prof = SKU_PROFILES.filter(function(s){return s.id===state.skuProfileId;})[0];
+    state.skuFactor = prof.factor;
+    renderAll();
+  });
+  wireInputs(document.getElementById("skuFields"), function(key,v){ state.skuFactor=v; renderAll(); });
+}
+
+function wireInputs(container, setter){
+  container.querySelectorAll("input[data-key]").forEach(function(inp){
+    inp.addEventListener("input", function(){
+      var v = parseFloat(inp.value); if(isNaN(v)) v=0;
+      setter(inp.getAttribute("data-key"), v);
+    });
+  });
+}
+
+/* ============================================================
+   6. RENDER: KPIs & charts
+   ============================================================ */
+function kpiCard(accentVar, label, value, unit, foot){
+  return '<div class="kpi" style="--kpi-accent:'+accentVar+'"><div class="kpi-label">'+label+'</div>'+
+    '<div class="kpi-value">'+value+'<span class="unit">'+unit+'</span></div>'+
+    '<div class="kpi-foot">'+foot+'</div></div>';
+}
+
+function renderKpis(r){
+  var spanLabel = state.span==="YTD" ? "YTD" : MONTHS[state.span];
+  var fossilShare = r.totalGrossCO2_kg>0 ? (r.totalFossilCO2_kg/r.totalGrossCO2_kg)*100 : 0;
+  var bioShare = 100-fossilShare;
+  var el = document.getElementById("kpiStrip");
+  el.innerHTML =
+    kpiCard("var(--accent-fire)","Total System GWP (Scope 1, "+spanLabel+")",
+      fmt0(r.totalFossilCO2_kg/1000), "t CO₂e",
+      "Calcination + combustion, fossil-reported · +"+fmt0(r.totalBiogenicCO2_kg/1000)+" t biogenic memo") +
+    kpiCard("var(--accent-mineral)","Specific Clinker Intensity",
+      fmt0(r.specificClinkerIntensity), "kg CO₂/t clinker",
+      "Step 1 of SKU allocation") +
+    kpiCard("var(--accent-bio)","Fossil vs. Biogenic Share",
+      fmt(fossilShare,0), "% fossil",
+      '<span class="kpi-split-bar" style="flex:1;"><span class="tone-fire tone-fill" style="flex:'+fossilShare+' 0 0;"></span><span class="tone-bio tone-fill" style="flex:'+bioShare+' 0 0;"></span></span>') +
+    kpiCard("var(--accent-fire)","Final SKU Footprint",
+      fmt0(r.skuFootprint), "kg CO₂/t cement",
+      (SKU_PROFILES.filter(function(s){return s.id===state.skuProfileId;})[0]||{}).name || "Custom");
+}
+
+function toneOf(c){ var m=/accent-(fire|bio|mineral)/.exec(c||""); return m ? m[1] : "ink"; }
+function toneCls(c){ return "tone-"+toneOf(c)+" tone-fill"; }
+
+function renderCombustionSplit(r){
+  var total = r.combustionFossil_kg + r.combustionBiogenic_kg;
+  var fossilFuelNames = r.fuelRows.filter(function(fr){ return fr.fossil_kg>0; }).map(function(fr){ return fr.ref.name; });
+  var bioFuelNames = r.fuelRows.filter(function(fr){ return fr.bio_kg>0; }).map(function(fr){ return fr.ref.name; });
+  var segs = [
+    {v:r.combustionFossil_kg, c:"var(--accent-fire)", label:"Fossil combustion", names:fossilFuelNames},
+    {v:r.combustionBiogenic_kg, c:"var(--accent-bio)", label:"Biogenic combustion", names:bioFuelNames}
+  ];
+  var stack = document.getElementById("combustionSplitStack");
+  stack.innerHTML = segs.map(function(s){
+    var pctv = total>0 ? (s.v/total*100) : 0;
+    return '<div class="'+toneCls(s.c)+'" style="flex:'+Math.max(pctv,0.0001)+' 0 0;" title="'+s.label+' ('+s.names.join(", ")+'): '+fmt0(s.v/1000)+' t CO₂e"></div>';
+  }).join("");
+  document.getElementById("combustionSplitLegend").innerHTML = segs.map(function(s){
+    var pctv = total>0 ? (s.v/total*100) : 0;
+    return '<span class="legend-item"><span class="dot '+toneCls(s.c)+'"></span>'+s.label+' ('+(s.names.length?s.names.join(" + "):"none")+')'+
+      '<span class="num">'+fmt0(s.v/1000)+' t CO₂e · '+fmt(pctv,0)+'%</span></span>';
+  }).join("");
+}
+
+function renderCcStack(r){
+  var total = r.calcinationCO2_kg + r.combustionFossil_kg + r.combustionBiogenic_kg;
+  var segs = [
+    {v:r.calcinationCO2_kg, c:"var(--accent-mineral)", label:"Calcination"},
+    {v:r.combustionFossil_kg, c:"var(--accent-fire)", label:"Combustion (fossil)"},
+    {v:r.combustionBiogenic_kg, c:"var(--accent-bio)", label:"Combustion (biogenic)"}
+  ];
+  var stack = document.getElementById("ccStack");
+  stack.innerHTML = segs.map(function(s){
+    var pctv = total>0 ? (s.v/total*100) : 0;
+    return '<div class="'+toneCls(s.c)+'" style="flex:'+Math.max(pctv,0.0001)+' 0 0;" title="'+s.label+': '+fmt0(s.v/1000)+' t"></div>';
+  }).join("");
+  document.getElementById("ccLegend").innerHTML = segs.map(function(s){
+    var pctv = total>0 ? (s.v/total*100) : 0;
+    return '<span class="legend-item"><span class="dot '+toneCls(s.c)+'"></span>'+s.label+'<span class="num">'+fmt0(s.v/1000)+' t · '+fmt(pctv,0)+'%</span></span>';
+  }).join("");
+}
+
+function renderCalcMethodPanel(r){
+  var stoichPerT = r.p.clinker>0 ? r.calcinationCO2_A_kg/r.p.clinker : 0;
+  var massbalPerT = r.p.clinker>0 ? r.calcinationCO2_massbal_kg/r.p.clinker : 0;
+  var maxV = Math.max(stoichPerT, massbalPerT, 1);
+  document.getElementById("calcStoichVal").textContent = fmt0(stoichPerT)+" kg CO₂/t clinker";
+  document.getElementById("calcMassbalVal").textContent = fmt0(massbalPerT)+" kg CO₂/t clinker";
+  document.getElementById("calcStoichBar").style.width = Math.max(4,(stoichPerT/maxV*100))+"%";
+  document.getElementById("calcMassbalBar").style.width = Math.max(4,(massbalPerT/maxV*100))+"%";
+
+  var pillClass = "status-"+r.calcMethodStatus;
+  var pillLabel = r.calcMethodStatus==="good"?"Converged":(r.calcMethodStatus==="warning"?"Check assumptions":"Diverging");
+  var pill = document.getElementById("calcMethodStatusPill");
+  pill.className = "status-pill "+pillClass;
+  pill.title = "Method I vs Method II. Converged within ±"+fmt(r.calcTol,1)+"%, Check assumptions up to ±"+fmt(2*r.calcTol,1)+"%, Diverging beyond. Set the tolerance in Mass balance assumptions.";
+  pill.innerHTML = '<span class="dot" style="background:currentColor"></span>'+pillLabel+' '+(r.calcMethodDeltaPct>=0?"+":"")+fmt(r.calcMethodDeltaPct,1)+"%";
+
+  var note = "Method I uses the clinker's own %CaO/%MgO assay (independent of the mass balance). Method II is whatever's left after raw meal (plus retained fuel ash) minus clinker minus bypass dust — it moves with the Mass balance assumptions panel (collapsed, in the left column).";
+  document.getElementById("calcMethodNote").textContent = note;
+}
+
+function renderSku(r){
+  document.getElementById("skuStep1").textContent = fmt0(r.specificClinkerIntensity)+" kg CO₂/t clinker";
+  document.getElementById("skuStep2").textContent = fmt0(r.skuFootprint)+" kg CO₂/t cement";
+  var maxV = Math.max(r.specificClinkerIntensity, r.skuFootprint, 1);
+  document.getElementById("skuStep1Bar").style.width = Math.max(4,(r.specificClinkerIntensity/maxV*100))+"%";
+  document.getElementById("skuStep2Bar").style.width = Math.max(4,(r.skuFootprint/maxV*100))+"%";
+}
+
+function mbLine(label, v, unit){
+  return '<div class="mb-line"><span>'+label+'</span><span class="v num">'+fmt0(v)+' '+unit+'</span></div>';
+}
+
+function renderMassBalance(r){
+  var inHtml = '<h3>Inputs</h3>' +
+    mbLine("Dry raw meal", r.rawMealDry_t, "t") +
+    mbLine("Raw-meal moisture", r.rawMealMoisture_t, "t") +
+    mbLine("Dry fuel mass", r.fuelDryTotal_t, "t") +
+    mbLine("Fuel moisture", r.fuelMoistureTotal_t, "t") +
+    mbLine("Combustion air", r.combustionAir_t, "t") +
+    mbLine("Process water", r.processWater_t, "t") +
+    '<div class="mb-total"><span>Total In</span><span class="num">'+fmt0(r.totalIn_t)+' t</span></div>';
+  var outHtml = '<h3>Outputs</h3>' +
+    mbLine("Clinker", r.p.clinker, "t") +
+    mbLine("Calcination CO₂ ("+(state.calcMethod==="massbal"?"mass-bal":"stoich")+")", r.calcinationCO2_kg/1000, "t") +
+    mbLine("Combustion CO₂", r.combustionCO2_kg/1000, "t") +
+    mbLine("Water vapour released", r.waterVapor_t, "t") +
+    mbLine("Water discharge", r.waterDischarge_t, "t") +
+    mbLine("Fuel ash → dust/bypass", r.fuelAshToDust_t, "t") +
+    mbLine("Raw-meal bypass dust", r.bypassDust_t, "t") +
+    mbLine("Unreacted air (N₂/O₂)", r.unreactedAir_t, "t") +
+    '<div class="mb-total"><span>Total Out</span><span class="num">'+fmt0(r.totalOut_t)+' t</span></div>';
+  document.getElementById("mbInSide").innerHTML = inHtml;
+  document.getElementById("mbOutSide").innerHTML = outHtml;
+  document.getElementById("mbDelta").textContent = (r.closurePct>=0?"+":"")+fmt(r.closurePct,2)+"%";
+  document.getElementById("mbDelta").style.color = r.mbStatus==="good"?"var(--status-good)":(r.mbStatus==="warning"?"var(--status-warning)":"var(--status-critical)");
+
+  var pillClass = "status-"+r.mbStatus;
+  var pillLabel = r.mbStatus==="good"?"Balanced":(r.mbStatus==="warning"?"Check inputs":"Imbalanced");
+  document.getElementById("mbStatusPill").className = "status-pill "+pillClass;
+  document.getElementById("mbStatusPill").innerHTML = '<span class="dot" style="background:currentColor"></span>'+pillLabel+' '+(r.closurePct>=0?"+":"")+fmt(r.closurePct,2)+"%";
+}
+
+// ---- Block Flow Diagram: draws one arrow per row, color-matched to the flow's chemistry ----
+function bfdArrow(x1, x2, y, color){
+  var dir = x2 > x1 ? 1 : -1;
+  var tipBack = x2 - dir*8;
+  return '<line x1="'+x1+'" y1="'+y+'" x2="'+tipBack+'" y2="'+y+'" stroke="'+color+'" stroke-width="2.5" stroke-linecap="round"></line>'+
+    '<polygon points="'+tipBack+','+(y-5)+' '+x2+','+y+' '+tipBack+','+(y+5)+'" fill="'+color+'"></polygon>';
+}
+
+function renderBFD(r){
+  var svg = document.getElementById('bfdSvg');
+  if(!svg) return;
+  var spanLabel = state.span==="YTD" ? "YTD Total" : MONTHS[state.span];
+  var rows = [55,108,161,214,267];
+  var leftX1=6, leftX2=235, rightX1=365, rightX2=594;
+
+  var inputs = [
+    {label:"Dry Raw Meal", value:r.rawMealDry_t, color:"var(--accent-mineral)"},
+    {label:"Fuel Mass (dry)", value:r.fuelDryTotal_t, color:"var(--accent-fire)"},
+    {label:"Combustion Air", value:r.combustionAir_t, color:"var(--ink-500)"},
+    {label:"Process Water", value:r.processWater_t, color:"var(--ink-500)"},
+    {label:"Moisture (feed)", value:r.rawMealMoisture_t + r.fuelMoistureTotal_t, color:"var(--ink-500)"}
+  ];
+  var outputs = [
+    {label:"Clinker", value:r.p.clinker, color:"var(--ink-900)", bold:true},
+    {label:"Calcination CO₂", value:r.calcinationCO2_kg/1000, color:"var(--accent-mineral)"},
+    {label:"Combustion CO₂", value:r.combustionCO2_kg/1000, color:"var(--accent-fire)"},
+    {label:"Water Vapour", value:r.waterVapor_t, color:"var(--ink-500)"},
+    {label:"Unreacted Air/Gas", value:r.unreactedAir_t, color:"var(--ink-500)"}
+  ];
+
+  var html =
+    '<rect x="235" y="30" width="130" height="260" rx="14" fill="var(--surface-sunken)" stroke="var(--border-strong)" stroke-width="1.5"></rect>'+
+    '<line x1="265" y1="167" x2="335" y2="167" stroke="var(--border)" stroke-width="1"></line>'+
+    '<text x="300" y="140" text-anchor="middle" font-family="var(--font-display)" font-size="15" font-weight="700" fill="var(--ink-900)">Pyroprocess</text>'+
+    '<text x="300" y="159" text-anchor="middle" font-family="var(--font-display)" font-size="15" font-weight="700" fill="var(--ink-900)">Kiln System</text>'+
+    '<text x="300" y="186" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--ink-500)">'+escapeHtml(spanLabel)+'</text>';
+
+  inputs.forEach(function(f, i){
+    var y = rows[i];
+    html += '<text x="'+leftX1+'" y="'+(y-7)+'" font-family="var(--font-body)" font-size="10.5" fill="var(--ink-700)">'+escapeHtml(f.label)+'</text>'+
+      '<text x="'+(leftX2-4)+'" y="'+(y-7)+'" text-anchor="end" font-family="var(--font-mono)" font-size="11" font-weight="'+(f.bold?'700':'600')+'" fill="'+f.color+'">'+fmt0(f.value)+' t</text>'+
+      bfdArrow(leftX1, leftX2, y, f.color);
+  });
+  outputs.forEach(function(f, i){
+    var y = rows[i];
+    html += '<text x="'+rightX1+'" y="'+(y-7)+'" font-family="var(--font-body)" font-size="10.5" fill="var(--ink-700)">'+escapeHtml(f.label)+'</text>'+
+      '<text x="'+(rightX2-4)+'" y="'+(y-7)+'" text-anchor="end" font-family="var(--font-mono)" font-size="11" font-weight="'+(f.bold?'700':'600')+'" fill="'+f.color+'">'+fmt0(f.value)+' t</text>'+
+      bfdArrow(rightX1, rightX2, y, f.color);
+  });
+
+  svg.innerHTML = html;
+  svg.setAttribute('aria-label',
+    'Block flow diagram for '+spanLabel+': into the kiln system — '+
+    inputs.map(function(f){ return f.label+' '+fmt0(f.value)+' t'; }).join(', ')+
+    '; out of the kiln system — '+
+    outputs.map(function(f){ return f.label+' '+fmt0(f.value)+' t'; }).join(', ')+'.'
+  );
+
+  var cap = document.getElementById('bfdCaption');
+  if(cap) cap.textContent = 'Five major mass streams for '+spanLabel+' — dry raw meal, fuel, combustion air, process water and feed moisture in; clinker, calcination CO₂, combustion CO₂, water vapour and unreacted air out. Minor streams (water discharge, ash/dust bypass) are folded out of this view for clarity — see the Mass Balance Closure Check below for the complete audited balance.';
+}
+
+function renderScope2Panel(r){
+  var p = r.p, a = state.assumptions;
+  var head =
+    '<div class="mb-total" style="border-top:none; padding-top:0;"><span>Total Scope 2 (electricity)</span><span class="num">'+fmt0(r.scope2_kg/1000)+' t CO₂e</span></div>' +
+    '<div class="mb-total" style="border-top:none; padding-top:2px;"><span style="font-weight:600;color:var(--ink-500);">Per t clinker</span><span class="num">'+fmt0(r.scope2PerTClinker)+' kg CO₂e/t</span></div>';
+  document.getElementById("scope2Headline").innerHTML = head;
+  var html =
+    mbLine("Electricity (burning + quench)", p.elecKWh, "kWh") +
+    '<div class="mb-line"><span>Grid emission factor</span><span class="v num">'+fmt(a.gridFactor,5)+' kg CO₂e/kWh</span></div>' +
+    '<div class="mb-total"><span>Scope 2 = electricity × grid EF</span><span class="num">'+fmt0(r.scope2_kg/1000)+' t CO₂e</span></div>';
+  document.getElementById("scope2Breakdown").innerHTML = html;
+}
+
+function renderUpstreamPanel(r){
+  var html = r.fuelRows.map(function(fr){
+    return mbLine(fr.ref.name+" (upstream)", fr.upstream_kg/1000, "t CO₂e");
+  }).join("") +
+    '<div class="mb-total"><span>Total upstream (Scope 3)</span><span class="num">'+fmt0(r.upstreamTotal_kg/1000)+' t CO₂e</span></div>';
+  document.getElementById("upstreamBreakdown").innerHTML = html;
+  document.getElementById("upstreamHeadline").innerHTML =
+    '<div class="mb-total" style="border-top:none; padding-top:0;"><span>Total upstream (Scope 3)</span><span class="num">'+fmt0(r.upstreamTotal_kg/1000)+' t CO₂e</span></div>' +
+    '<div class="mb-total" style="border-top:none; padding-top:2px;"><span style="font-weight:600;color:var(--ink-500);">Per t clinker</span><span class="num">'+fmt0(r.upstreamPerTClinker)+' kg CO₂e/t</span></div>';
+}
+
+function renderTrend(){
+  var svg = document.getElementById("trendChart");
+  var W=600,H=190, padL=34, padR=8, padT=10, padB=22;
+  var plotW = W-padL-padR, plotH = H-padT-padB;
+  var data = MONTHS.map(function(m,i){ return calcMonthLite(i); });
+  var maxV = Math.max.apply(null, data.map(function(d){ return d.calc+d.fossil+d.bio; }).concat([1]));
+  var barW = plotW/12*0.62, gap = plotW/12;
+
+  var bars = data.map(function(d,i){
+    var x = padL + i*gap + (gap-barW)/2;
+    var segs = [
+      {v:d.calc, c:"var(--accent-mineral)"},
+      {v:d.fossil, c:"var(--accent-fire)"},
+      {v:d.bio, c:"var(--accent-bio)"}
+    ];
+    var y = padT+plotH;
+    var rects = segs.map(function(s){
+      var h = (s.v/maxV)*plotH;
+      y -= h;
+      return '<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+barW.toFixed(1)+'" height="'+Math.max(h,0).toFixed(1)+'" rx="2" style="fill:var(--accent-'+toneOf(s.c)+'-soft);stroke:color-mix(in srgb, var(--accent-'+toneOf(s.c)+') 60%, transparent);stroke-width:1.2px;"></rect>';
+    }).join("");
+    var selected = (state.span===i);
+    var outline = selected ? '<rect x="'+(x-3).toFixed(1)+'" y="'+(padT-2)+'" width="'+(barW+6).toFixed(1)+'" height="'+(plotH+4)+'" fill="none" stroke="var(--ink-900)" stroke-width="1.2" stroke-dasharray="2 2" rx="4"></rect>' : '';
+    var label = '<text x="'+(x+barW/2).toFixed(1)+'" y="'+(H-7)+'" text-anchor="middle" font-family="IBM Plex Mono" font-size="9.5" fill="var(--ink-500)">'+MONTHS[i]+'</text>';
+    var total = d.calc+d.fossil+d.bio;
+    return '<g class="trend-bar" data-month="'+i+'" data-total="'+total.toFixed(1)+'" style="cursor:pointer;">'+rects+outline+label+
+      '<rect x="'+x.toFixed(1)+'" y="'+padT+'" width="'+barW.toFixed(1)+'" height="'+plotH+'" fill="transparent"></rect></g>';
+  }).join("");
+
+  // simple gridlines
+  var grid = "";
+  for(var g=0; g<=2; g++){
+    var gy = padT + plotH - (g/2)*plotH;
+    grid += '<line x1="'+padL+'" x2="'+(W-padR)+'" y1="'+gy.toFixed(1)+'" y2="'+gy.toFixed(1)+'" stroke="var(--border)" stroke-width="1"></line>';
+    grid += '<text x="'+(padL-6)+'" y="'+(gy+3).toFixed(1)+'" text-anchor="end" font-family="IBM Plex Mono" font-size="9" fill="var(--ink-400)">'+fmt0(maxV*g/2)+'</text>';
+  }
+
+  svg.innerHTML = grid + bars;
+  svg.setAttribute("viewBox","0 0 "+W+" "+H);
+
+  document.getElementById("trendLegend").innerHTML =
+    '<span class="legend-item"><span class="dot tone-mineral tone-fill"></span>Calcination</span>'+
+    '<span class="legend-item"><span class="dot tone-fire tone-fill"></span>Combustion (fossil)</span>'+
+    '<span class="legend-item"><span class="dot tone-bio tone-fill"></span>Combustion (biogenic)</span>';
+
+  var tt = document.getElementById("tooltip");
+  svg.querySelectorAll(".trend-bar").forEach(function(g){
+    g.addEventListener("mousemove", function(e){
+      var mIdx = parseInt(g.getAttribute("data-month"),10);
+      var d = data[mIdx];
+      tt.innerHTML = '<div class="tt-title">'+MONTHS[mIdx]+'</div>'+
+        'Calcination: '+fmt0(d.calc)+' kg/t<br>Combustion fossil: '+fmt0(d.fossil)+' kg/t<br>Combustion biogenic: '+fmt0(d.bio)+' kg/t<br>Total: '+fmt0(d.calc+d.fossil+d.bio)+' kg/t';
+      tt.style.left = (e.clientX+14)+"px"; tt.style.top=(e.clientY+10)+"px";
+      tt.classList.add("show");
+    });
+    g.addEventListener("mouseleave", function(){ tt.classList.remove("show"); });
+    g.addEventListener("click", function(){
+      var mIdx = parseInt(g.getAttribute("data-month"),10);
+      loadTimespan(mIdx, true); renderAll();
+    });
+  });
+}
+
+function focusKey(el){
+  if(!el || !el.closest || !el.closest(".app") || !/^(INPUT|SELECT)$/.test(el.tagName)) return null;
+  var k = {id: el.id || null, fkey: el.getAttribute("data-fkey"), dkey: el.getAttribute("data-key")};
+  var tr = el.closest("tr[data-idx]"); k.idx = tr ? tr.getAttribute("data-idx") : null;
+  k.tbody = tr && tr.parentNode ? tr.parentNode.id : null;
+  try{ k.s = el.selectionStart; k.e = el.selectionEnd; }catch(_){ k.s = null; }
+  k.isNum = el.type==="number";
+  if(k.isNum){ k.len = (el.value||"").length; }
+  return k;
+}
+function restoreFocus(k){
+  if(!k) return;
+  var el = null;
+  if(k.id) el = document.getElementById(k.id);
+  else if(k.idx!==null && k.tbody && (k.fkey||k.dkey)){
+    el = document.querySelector('#'+k.tbody+' tr[data-idx="'+k.idx+'"] [data-fkey="'+(k.fkey||k.dkey)+'"]');
+  }
+  if(!el) return;
+  el.focus();
+  try{
+    if(k.isNum){ var t=el.type; el.type="text"; var n=el.value.length; el.setSelectionRange(n,n); el.type=t; }
+    else if(k.s!==null && k.s!==undefined) el.setSelectionRange(k.s,k.e);
+  }catch(_){}
+}
+function renderAll(){
+  var fk = focusKey(document.activeElement);
+  renderAllInner();
+  restoreFocus(fk);
+}
+function renderAllInner(){
+  var r = calc();
+  renderProductLineBar();
+  renderTimespanTabs();
+  renderProductionFields();
+  renderFuelTable();
+  renderCombustionFields();
+  renderAuxFields();
+  renderMbFields();
+  renderCkdFields();
+  renderBackgroundPanel();
+  renderSkuFields();
+  renderKpis(r);
+  renderCkdReadout(r);
+  renderCombustionSplit(r);
+  renderCcStack(r);
+  renderCalcMethodPanel(r);
+  renderSku(r);
+  renderBFD(r);
+  renderMassBalance(r);
+  renderScope2Panel(r);
+  renderUpstreamPanel(r);
+  renderTrend();
+  renderTraceNotes(r);
+  if(typeof convRefreshFuels==="function") convRefreshFuels();
+  document.getElementById("lastCalc").textContent = "Engine recalculated · "+ new Date().toLocaleTimeString();
+}
+function renderCharts(){ var r=calc(); renderCkdReadout(r); renderKpis(r); renderCombustionSplit(r); renderCcStack(r); renderCalcMethodPanel(r); renderSku(r); renderBFD(r); renderMassBalance(r); renderScope2Panel(r); renderUpstreamPanel(r); renderTrend(); renderTraceNotes(r); }
+
+/* ============================================================
+   6b. CALCULATION TRACE & AUDIT NOTES
+   One concise, dynamically-built line under each major output metric, showing the exact
+   formula lineage / data source behind the number currently on screen — so an operator can
+   audit any figure without opening the Methodology panel or the source workbook.
+   ============================================================ */
+function setTrace(id, text){
+  var el = document.getElementById(id);
+  if(el) el.innerHTML = '<span class="trace-label">Trace:</span> '+text;
+}
+
+function renderTraceNotes(r){
+  var a = state.assumptions;
+
+  // Combustion CO2 — formula is fixed; trace shows the live inputs driving it.
+  var nFuels = state.fuels.length;
+  var combustionTrace =
+    'Σ(as-fed fuel mass × carbon% (as-fired) × 44/12 × OF) — OF='+fmt(a.OF,3)+', '+nFuels+' fuel stream'+(nFuels===1?'':'s')+
+    ' ('+fmt0(r.combustionFossil_kg/1000)+' t fossil + '+fmt0(r.combustionBiogenic_kg/1000)+' t biogenic).';
+  setTrace('traceCombustion', combustionTrace);
+
+  // Calcination CO2 — trace follows whichever method is currently driving GWP totals.
+  var calcTrace;
+  if(state.calcMethod === 'massbal'){
+    var ashRetained_kg = r.fuelAshTotal_kg * (1 - a.ashLossFraction/100);
+    var bypassDust_kg = r.bypassDust_t*1000;
+    var dustNote = r.ckd.md>0 ? 'CKD export '+fmt0(r.ckd.md)+' t (measured)' : 'bypass '+fmt(a.bypassDustPct,1)+'%';
+    var massbalPerT = r.p.clinker>0 ? r.calcinationCO2_massbal_kg/r.p.clinker : 0;
+    calcTrace =
+      'Method II — mass-balance difference: dry raw meal '+fmt0(r.rawMealDry_t)+' t + retained fuel ash '+fmt0(ashRetained_kg/1000)+
+      ' t − clinker '+fmt0(r.p.clinker)+' t − dust out '+fmt0(bypassDust_kg/1000)+' t = '+fmt0(massbalPerT)+
+      ' kg/t clinker ('+dustNote+', ash loss '+fmt(a.ashLossFraction,1)+'%).';
+  } else {
+    var stoichPerT = r.p.clinker>0 ? r.calcinationCO2_stoich_kg/r.p.clinker : 0;
+    var aPerT = r.p.clinker>0 ? r.calcinationCO2_A_kg/r.p.clinker : 0;
+    calcTrace =
+      'Method I — clinker XRF stoichiometry × CFckd: '+fmt0(r.p.clinker)+' t × (CaO '+fmt(r.p.caoPct,2)+'% × 44.01/56.08 + MgO '+
+      fmt(r.p.mgoPct,2)+'% × 44.01/40.30) = '+fmt0(stoichPerT)+' kg/t clinker, × CFckd '+fmt(r.ckd.cf,3)+' = '+fmt0(aPerT)+
+      ' kg/t clinker (this period\'s XRF assay).';
+  }
+  setTrace('traceCalcination', calcTrace);
+
+  // CKD correction (IPCC Eq. 2.5) — states the basis whether or not it changes the number.
+  var ckdTrace;
+  if(r.ckd.md > 0){
+    ckdTrace = 'CFckd = 1 + (Md/Mcl) × Cd × Fd × (EFc/EFcl) = 1 + ('+fmt(r.ckd.md,1)+' t / '+fmt0(r.p.clinker)+' t) × '+fmt(r.ckd.cd,3)+
+      ' ('+r.ckd.cdSource+') × '+fmt(r.ckd.fd,3)+' ('+escapeHtml(r.ckd.fdSource)+') × ('+fmt(EF_CACO3,5)+' / '+fmt(r.ckd.efcl,4)+') = '+fmt(r.ckd.cf,4)+
+      '. Adds '+fmt0(r.ckd.addon_kg/1000)+' t CO₂ to calcination.';
+  } else {
+    ckdTrace = 'CFckd = 1.000 — Md = 0, so the Eq. 2.5 correction term is zero. Basis: '+
+      (a.ckdBasis ? escapeHtml(a.ckdBasis) : 'none recorded (IPCC default 1.02 would apply for an unverified site)')+'.';
+  }
+  setTrace('traceCkd', ckdTrace);
+
+  // Scope 2 (electricity) — formula is fixed; trace shows the live inputs and the grid EF's provenance.
+  var gridBadgeState = (a.gridFactorSource && typeof a.gridFactorSourceValue === "number" && Math.abs(a.gridFactor - a.gridFactorSourceValue) < 1e-6)
+    ? a.gridFactorSource : (a.gridFactor>0 ? "custom, unlogged source" : "unverified");
+  var scope2Trace =
+    'Electricity '+fmt0(r.p.elecKWh)+' kWh × grid EF '+fmt(a.gridFactor,5)+' kg CO₂e/kWh ('+escapeHtml(gridBadgeState)+') = '+
+    fmt0(r.scope2_kg/1000)+' t CO₂e.';
+  setTrace('traceScope2', scope2Trace);
+
+  // Upstream (Scope 3) — lists which fuel EFs are actually driving the total vs. still 0/placeholder.
+  // Raw Meal is deliberately excluded from this fuel-by-fuel audit, not counted as a "placeholder gap" —
+  // it's an on-site intermediate (see calc()), not a material awaiting an upstream EF.
+  var nonzero = [];
+  r.fuelRows.forEach(function(fr){
+    var ef = fr.ref.efUpstream || 0;
+    if(ef > 0) nonzero.push(escapeHtml(fr.ref.name)+' '+fmt(ef,2)+' kg/t');
+  });
+  var totalMaterials = r.fuelRows.length;
+  var zeroCount = totalMaterials - nonzero.length;
+  var upstreamTrace =
+    'Σ(as-fed fuel mass × upstream EF)'+(nonzero.length ? ' — '+nonzero.join(', ') : '')+
+    (zeroCount>0 ? ' ('+zeroCount+' fuel'+(zeroCount===1?'':'s')+' at 0, placeholder)' : '')+
+    '. Raw Meal excluded — on-site process, not an external upstream purchase.';
+  setTrace('traceUpstream', upstreamTrace);
+
+  // Final SKU Intensity — Step 1 x Step 2, with the active SKU profile named.
+  var skuProf = SKU_PROFILES.filter(function(s){ return s.id===state.skuProfileId; })[0];
+  var skuName = skuProf ? skuProf.name : 'Custom';
+  var skuTrace =
+    'Specific clinker intensity '+fmt0(r.specificClinkerIntensity)+' kg CO₂/t clinker (Step 1) × clinker-to-cement factor '+
+    fmt(state.skuFactor,2)+' ('+escapeHtml(skuName)+') = '+fmt0(r.skuFootprint)+' kg CO₂/t cement.';
+  setTrace('traceSkuFinal', skuTrace);
+}
+
+/* ============================================================
+   7. EXCEL IMPORT (SheetJS)
+   Reads a workbook structured like the plant's own "mass balance matrix" sheet and
+   replaces the monthly production / fuel tonnage & LHV / electricity / water baselines.
+   Cell map (confirmed against the plant's actual workbook):
+     row 6  Raw Mill (raw meal, wet, t)         cols E..P  = Jan..Dec
+     row 7  inbound moisture content (%)        cols E..P  = Jan..Dec
+     row 9  Pet Coke  mass (t)                  cols E..P  = Jan..Dec   LHV (kcal/kg) cols S..AD = Jan..Dec
+     row 10 AF (Rice Husk) mass (t)             cols E..P  = Jan..Dec   LHV (kcal/kg) cols S..AD = Jan..Dec
+     row 11 CKB mass (t)                        cols E..P  = Jan..Dec   LHV (kcal/kg) cols S..AD = Jan..Dec
+     row 12 Electricity Clinker Burning (kWh)   cols E..P  = Jan..Dec
+     row 14 Water for Cooling Machine (m3)      cols E..P  = Jan..Dec
+     row 16 Clinker Production (t)              cols E..P  = Jan..Dec   %CaO cols S..AD = Jan..Dec
+     row 17 %MgO                                                        cols S..AD = Jan..Dec
+   ============================================================ */
+var IMPORT_MONTH_COLS_A = ["E","F","G","H","I","J","K","L","M","N","O","P"];       // Jan..Dec: production/mass/elec/water block
+var IMPORT_MONTH_COLS_B = ["S","T","U","V","W","X","Y","Z","AA","AB","AC","AD"];   // Jan..Dec: LHV / %CaO / %MgO block
+var IMPORT_ROWS = {
+  rawMealWet:6, moisturePct:7,
+  petcokeMass:9, petcokeLHV:9,
+  ricehuskMass:10, ricehuskLHV:10,
+  ckbMass:11, ckbLHV:11,
+  elecKWh:12, waterM3:14,
+  clinker:16, caoPct:16, mgoPct:17
+};
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+
+function readCellNum(ws, col, row){
+  var cell = ws[col+row];
+  if(!cell || cell.t === "e") return 0;
+  var v = cell.v;
+  if(typeof v === "number" && isFinite(v)) return v;
+  if(typeof v === "string"){ var n = parseFloat(v); return isNaN(n) ? 0 : n; }
+  return 0;
+}
+
+function findMassBalanceSheet(workbook){
+  var name = workbook.SheetNames.filter(function(n){ return n.trim().toLowerCase() === "mass balance matrix"; })[0];
+  if(!name) name = workbook.SheetNames.filter(function(n){ return n.toLowerCase().indexOf("mass balance") !== -1; })[0];
+  return name;
+}
+
+function parseImportedWorkbook(workbook){
+  var sheetName = findMassBalanceSheet(workbook);
+  if(!sheetName){
+    throw new Error('No "mass balance matrix" sheet found in this file (looked for a sheet named like that).');
+  }
+  var ws = workbook.Sheets[sheetName];
+
+  var newProduction = [];
+  var petcokeMass=[], petcokeLHV=[], ricehuskMass=[], ricehuskLHV=[], ckbMass=[], ckbLHV=[];
+
+  for(var i=0;i<12;i++){
+    var colA = IMPORT_MONTH_COLS_A[i], colB = IMPORT_MONTH_COLS_B[i];
+    newProduction.push({
+      clinker: readCellNum(ws, colA, IMPORT_ROWS.clinker),
+      rawMealWet: readCellNum(ws, colA, IMPORT_ROWS.rawMealWet),
+      moisturePct: readCellNum(ws, colA, IMPORT_ROWS.moisturePct) || 0.8,
+      ckdExport: 0, ckdReturned: 0, // not part of the import layout; re-enter in the CKD Correction card if the site exports CKD
+      caoPct: readCellNum(ws, colB, IMPORT_ROWS.caoPct),
+      mgoPct: readCellNum(ws, colB, IMPORT_ROWS.mgoPct),
+      elecKWh: readCellNum(ws, colA, IMPORT_ROWS.elecKWh),
+      waterM3: readCellNum(ws, colA, IMPORT_ROWS.waterM3)
+    });
+    petcokeMass.push(readCellNum(ws, colA, IMPORT_ROWS.petcokeMass));
+    petcokeLHV.push(readCellNum(ws, colB, IMPORT_ROWS.petcokeLHV));
+    ricehuskMass.push(readCellNum(ws, colA, IMPORT_ROWS.ricehuskMass));
+    ricehuskLHV.push(readCellNum(ws, colB, IMPORT_ROWS.ricehuskLHV));
+    ckbMass.push(readCellNum(ws, colA, IMPORT_ROWS.ckbMass));
+    ckbLHV.push(readCellNum(ws, colB, IMPORT_ROWS.ckbLHV));
+  }
+
+  var totalClinker = newProduction.reduce(function(s,m){ return s+m.clinker; },0);
+  if(totalClinker <= 0){
+    throw new Error('Found the "'+sheetName+'" sheet, but Clinker Production (row 16) looks empty — check the file matches the expected layout.');
+  }
+
+  return {
+    monthsWithData: newProduction.filter(function(m){ return m.clinker>0; }).length,
+    production: newProduction,
+    fuelMonthly: {
+      petcoke: {mass:petcokeMass, lhvKcal:petcokeLHV},
+      ricehusk: {mass:ricehuskMass, lhvKcal:ricehuskLHV},
+      ckb: {mass:ckbMass, lhvKcal:ckbLHV}
+    }
+  };
+}
+
+function setImportBusy(busy){
+  var btn = document.getElementById("importBtn");
+  btn.disabled = busy;
+  btn.textContent = busy ? "Reading file…" : "Upload Excel file (.xlsx)";
+}
+
+function showImportBanner(kind, html){
+  var el = document.getElementById("importBanner");
+  var cls = kind==="good" ? "import-banner-good" : kind==="info" ? "import-banner-info" : "import-banner-bad";
+  el.className = "import-banner "+cls;
+  el.innerHTML = html;
+  el.hidden = false;
+}
+
+function applyImportedData(parsed, filename){
+  MONTHLY_PRODUCTION = parsed.production;
+  FUEL_DEFS.forEach(function(fd){
+    var m = parsed.fuelMonthly[fd.id];
+    if(m){ fd.mass = m.mass; fd.lhvKcal = m.lhvKcal; }
+  });
+  loadTimespan(state.span, false);
+  renderAll();
+  showImportBanner("good",
+    "✓ Loaded <b>"+escapeHtml(filename)+"</b> — production, Pet Coke / Rice Husk / CKB tonnage &amp; LHV, "+
+    "electricity, water and %CaO/%MgO updated ("+parsed.monthsWithData+" month(s) with data). "+
+    "Fuel composition (carbon %, ash %, air ratio, upstream EF) and any custom fuel rows were reset to default."
+  );
+}
+
+function handleImportFile(file){
+  document.getElementById("importBanner").hidden = true;
+  setImportBusy(true);
+  var reader = new FileReader();
+  reader.onload = function(evt){
+    try{
+      var data = new Uint8Array(evt.target.result);
+      var workbook = XLSX.read(data, {type:"array"});
+      var parsed = parseImportedWorkbook(workbook);
+      applyImportedData(parsed, file.name);
+    } catch(err){
+      showImportBanner("bad", "✕ Could not import <b>"+escapeHtml(file.name)+"</b> — "+escapeHtml(err.message||String(err)));
+    } finally {
+      setImportBusy(false);
+    }
+  };
+  reader.onerror = function(){
+    showImportBanner("bad", "✕ Could not read <b>"+escapeHtml(file.name)+"</b>.");
+    setImportBusy(false);
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+/* ============================================================
+   8. WIRING & INIT
+   ============================================================ */
+document.getElementById("importBtn").addEventListener("click", function(){
+  document.getElementById("importFile").click();
+});
+document.getElementById("templateInfoBtn").addEventListener("click", function(){
+  var ref = document.querySelector("details.template-ref");
+  if(ref){ ref.open = true; ref.scrollIntoView({behavior:"smooth", block:"nearest"}); }
+  showImportBanner("info", "No .xlsx template is available yet — Excel import is a demo of the import path, wired to the plant's own \u201cmass balance matrix\u201d workbook. The layout it expects is shown below.");
+});
+document.getElementById("importFile").addEventListener("change", function(e){
+  var file = e.target.files && e.target.files[0];
+  e.target.value = ""; // allow re-uploading the same filename later
+  if(!file) return;
+  if(typeof XLSX === "undefined"){
+    showImportBanner("bad", "✕ The Excel-reading library didn't load — check your connection and reload the page.");
+    return;
+  }
+  handleImportFile(file);
+});
+
+// ---- Dry-basis -> as-fired converter (fuel table helper) ----
+// X_ar = X_dry * (1 - M) for C, H, O, S, ash;  LHV_ar = LHV_dry * (1 - M) - 2.443 * M  (MJ/kg, M = wet-basis moisture fraction)
+var CONV_KEYS = ["C","H","O","S","ash","lhv"];
+function convRead(){
+  var g = function(id){ var v = document.getElementById(id).value; if(v===""||v===null) return null; var n = parseFloat(v); return isNaN(n) ? null : n; };
+  var o = { idx: parseInt(document.getElementById("conv_fuel").value,10), M: g("conv_M") };
+  CONV_KEYS.forEach(function(k){ o[k] = g("conv_"+k); });
+  return o;
+}
+function convCompute(o){
+  if(o.M===null || o.M<0 || o.M>=100) return null;
+  var m = o.M/100, out = {}, any = false;
+  ["C","H","O","S","ash"].forEach(function(k){ if(o[k]!==null){ out[k] = Math.round(o[k]*(1-m)*100)/100; any = true; } });
+  if(o.lhv!==null){ out.lhv = Math.round((o.lhv*(1-m) - 2.443*m)*100)/100; any = true; }
+  return any ? out : null;
+}
+function convUpdatePreview(){
+  var o = convRead(), out = convCompute(o), el = document.getElementById("conv_preview"), btn = document.getElementById("conv_apply");
+  var f = state.fuels[o.idx];
+  if(!out || !f){ el.textContent = (o.M!==null && (o.M<0 || o.M>=100)) ? "Moisture must be between 0 and 99.9 %." : "Enter the moisture and at least one dry-basis value."; btn.disabled = true; return; }
+  var parts = [], lbl = {C:"Carbon", H:"H", O:"O", S:"S", ash:"Ash", lhv:"LHV"};
+  CONV_KEYS.forEach(function(k){ if(out[k]!==undefined){
+    var skip = (k==="H"||k==="O"||k==="S") && !f.comp;
+    parts.push(lbl[k]+" "+fmt(o[k],2)+" → "+fmt(out[k],2)+(k==="lhv"?" MJ/kg":" %")+(skip?" (not used: this fuel keeps the plant air-ratio constant)":"")); } });
+  el.innerHTML = "As-fired at "+fmt(o.M,1)+" % moisture → <b>"+escapeHtml(f.name)+"</b><br>"+parts.join("<br>");
+  btn.disabled = false;
+}
+function convRefreshFuels(){
+  var sel = document.getElementById("conv_fuel"); if(!sel) return;
+  var keep = sel.value;
+  sel.innerHTML = state.fuels.map(function(f,i){ return '<option value="'+i+'">'+escapeHtml(f.name)+'</option>'; }).join("");
+  if(keep!=="" && parseInt(keep,10) < state.fuels.length) sel.value = keep;
+  convUpdatePreview();
+}
+function convApply(){
+  var o = convRead(), out = convCompute(o), f = state.fuels[o.idx];
+  if(!out || !f) return;
+  f.moisturePct = o.M;
+  if(f.proxy) f.proxy.moisturePct = false;
+  if(out.C!==undefined){ f.carbonPct = out.C; if(f.proxy) f.proxy.carbonPct = false; }
+  if(out.ash!==undefined){ f.ashPct = out.ash; if(f.proxy) f.proxy.ashPct = false; }
+  if(out.lhv!==undefined){ f.lhv = out.lhv; f.lhvEdited = true; if(f.proxy) f.proxy.lhv = false; }
+  if(f.comp) ["H","O","S"].forEach(function(k){ if(out[k]!==undefined){ f.comp[k] = out[k]; if(f.proxy) f.proxy[k] = false; } });
+  if(f.comp) f.airRatio = fuelAirRatio(f);
+  renderAll();
+  document.getElementById("conv_preview").innerHTML += "<br>✓ Applied.";
+}
+document.querySelectorAll("#fuelConvFields input, #fuelConvFields select").forEach(function(el){
+  el.addEventListener("input", convUpdatePreview); el.addEventListener("change", convUpdatePreview);
+});
+document.getElementById("conv_apply").addEventListener("click", convApply);
+renderFuelLibrarySelect();
+document.getElementById("fuelLibrarySel").addEventListener("change", function(){
+  var k = this.value; this.value = "";
+  if(k) addFuelFromLibrary(k);
+});
+document.getElementById("addFuelBtn").addEventListener("click", function(){
+  state.fuelSeq++;
+  state.fuels.push({ id:"custom_"+state.fuelSeq, name:"New fuel "+state.fuelSeq, category:"fossil", lhv:20, carbonPct:50,
+    moisturePct:10, biogenicPct:0, ashPct:5, comp:{H:null,O:null,S:null}, airRatio:0, efUpstream:0, mass:0, isCustom:true });
+  renderAll();
+});
+document.getElementById("resetProduction").addEventListener("click", function(){
+  loadTimespan(state.span, false);
+  renderAll();
+});
+
+// "Show how it's calculated" switch — hides trace lines, explanatory notes and the methodology card unless on.
+(function(){
+  var appEl = document.querySelector(".app"), tg = document.getElementById("detailToggle");
+  var on = false;
+  try{ on = localStorage.getItem("pyroShowDetail") === "1"; }catch(e){}
+  function apply(v){ appEl.classList.toggle("show-detail", v); tg.checked = v; }
+  apply(on);
+  tg.addEventListener("change", function(){
+    apply(tg.checked);
+    try{ localStorage.setItem("pyroShowDetail", tg.checked ? "1" : "0"); }catch(e){}
+  });
+})();
+
+loadTimespan(0, false);
+renderAll();
+
+})();
+</script>
+
+</body></html>
